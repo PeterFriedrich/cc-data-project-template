@@ -21,7 +21,9 @@ the agent does in between speeds that up.
 1. **Subscribe, don't schedule.** After opening a PR, call
    `subscribe_pr_activity`. CI failures, reviews and comments arrive as events
    and wake the session on their own. **Never arm `send_later` or a trigger to
-   re-check a PR.**
+   re-check a PR.** A local CLI session (e.g. a long-running tmux one) has no
+   PR events; it costs nothing while idle, so don't give it a timer either
+   (`/loop`, `CronCreate`, `ScheduleWakeup`). Check the PR at the next real turn.
 2. **Before pushing, check the result instead of waiting for it.** Run the
    repo's checks locally (pytest, the guard scripts) so the push is expected to
    go green. An event wakes you if it doesn't.
