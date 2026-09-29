@@ -70,6 +70,80 @@ snapshot).
   has to be hand-copied into a second project") **has already fired**: the
   steward skill and the cache doc were hand-copied into `edmonton-permit-speed`.
 
+## Research round (TODO B): triage of the Claude web reply
+
+**Source:** `research/cc-data-project-template/template_improvement_reply_2026-09-29.md`,
+kept outside the repo, answering `…_research_prompt_2026-09-29.md`.
+
+**Spot-checked 2026-09-29 before building on it:**
+- Every cited GitHub issue and PR exists and says what the reply says:
+  `anthropics/claude-code` #87497, #97096 and #98050;
+  `akaszubski/autonomous-dev` #1727; `wasaybuilds/proof-of-done` #9;
+  `serpro69/claude-toolbox` (149★).
+- The load-bearing claim is **confirmed on the live docs**. In the carry-over
+  table of `code.claude.com/docs/en/cloud-environments`, "Plugins and
+  marketplaces declared in your repo's `.claude/settings.json`" reads **No**,
+  while repo hooks, `.claude/skills/` and `CLAUDE.md` read Yes. Hooks apply only
+  "in a session with one repository".
+- #87497 is **closed as NOT_PLANNED by the stale bot**. It was not fixed.
+- **Not checked:** the arXiv IDs, `/team-onboarding`, and copier's
+  `_skip_if_exists` behaviour on update (the reply quotes copier's docs for it).
+- **The reply missed one thing** that is on the same docs page: "Cloud sessions
+  automatically load skills you enable on claude.ai". That is a route for
+  skills only, not for hooks.
+
+### New candidates
+
+| # | Candidate | Source label | My read |
+|---|---|---|---|
+| R1 | **Pinned subject counts.** Every guard asserts `== <measured n>` subjects, never `>= 1`, and a falsification run asserts the mutant was actually applied. | B, measured (#1727) | **Adopt.** It hits the top finding class directly, and it is the concrete form of Tier 2 #8. Cheap to do in the template's own guards once #1 (tests) exists. |
+| R2 | **A Stop-hook gate**: re-run the fast guards when Claude says it's done, and exit 2 so any failure goes back to Claude. | A for the mechanism; no measurement | **Adopt, scoped.** Run the guard scripts only, not the full suite (edmonton has ~875 tests). Needs a `stop_hook_active` loop cap. It moves guard output onto a channel the agent has to read. |
+| R3 | **A protected-path PreToolUse hook** on tests and guards. | A (a recipe, copied everywhere) | **Adapt, don't adopt.** A blanket *deny* collides with this template's own rule that a decision is "a test first", so sessions write and edit tests all the time. Use `ask` on *existing* guard files, or R4, instead. It must match `Bash` too, or `sed -i` walks straight past it. |
+| R4 | **Test-tamper detection at Stop**: diff the tests against a baseline taken at session start, and flag deleted or weakened assertions. | B (one repo) | **Prefer this over R3.** It flags weakening without blocking legitimate test-writing. Medium effort. |
+| R5 | **Deny `--no-verify`** for Claude. | B (one report) | **Adapt to `ask`.** `CLAUDE.md` names `git push --no-verify` as the documented escape hatch, so a deny would contradict it. |
+| R6 | **A guard heartbeat ledger**: each guard writes `{guard, subjects_checked, verdict}`, and a meta-test fails on a missing or stale entry. | The reply's own inference | **Hold** until R1 lands. Much of it overlaps R1 plus the SessionStart hook. |
+| R7 | **Mutation testing** (mutmut, pinned version) scoped to the guard scripts, on demand or weekly, never as a merge gate. | B (one detailed report) | **Later.** It needs #1 first, since you can't mutation-test scripts that have no tests. It fits the audit skill as one guard module per run. |
+| R8 | **One guard config file** (`guards.toml`: `test_glob`, `default_branch`), with detection as the fallback and a pinned-count check on the glob. | Inference, consistent with 3 repos | **Adopt.** It supersedes Tier 1 #5's "one constant at the top". The pinned count catches a Python glob left in a JS repo, which would otherwise check zero tests and pass. |
+
+### C (sync direction): recommendation
+
+The reply recommends **copier for everything that lives in the repo**, a plugin
+later and only for CLI-only extras, and **backflow by diffing an instance
+against a template render at its recorded `_commit`.** Given the confirmed docs
+row, I agree with the direction, with three amendments:
+
+1. **edmonton-tax-viz should not become a copier instance.** Its owned files
+   are deliberately edmonton-specific (e.g. `edmonton-audit` in place of
+   `project-audit`), so every `copier update` would conflict. It stays a
+   *source*, and backflow from it is the backport diff only.
+2. **Onboard one instance first.** The candidate is `edmonton-permit-speed`,
+   which is byte-identical to the template today, so the first `copier copy`
+   reconciles nothing. Add the others only if that goes cleanly. The six-at-once
+   plan in the reply is the expensive version.
+3. **An `owner_name` answer fixes the cosmetic drift**, which was the
+   observation that made a hand-rolled byte-compare drift check unworkable.
+
+Copier is a new dependency and changes how every instance gets updated, so it
+**needs the owner's sign-off** (CLAUDE.md: propose first).
+
+### D (spec sheet): recommendation
+
+The reply proposes a generated `BRIEF.md`, a CI gate that fails whenever it is
+stale, a private claude.ai Project synced through the GitHub integration, and an
+`ingest_reply.py`. It says itself that none of that loop is published practice.
+**I'd take the smallest slice:**
+
+1. **`make_brief.py`, run on demand, printing to stdout.** No committed file,
+   so nothing can go stale and no CI gate is needed. The only hand-kept part is a
+   short `SCOPE.md` ("out of scope / don't recommend back"), which has to exist
+   anyway.
+2. **A required output block at the end of every research prompt**: fenced
+   tables whose columns match `TODO.md` / `DECISIONS.md` rows. This costs
+   nothing, and this round already half-did it.
+3. **Defer** the committed `BRIEF.md` with its CI gate, the GitHub-integration
+   sync (#98050 is *open*: private repos 404), and `ingest_reply.py`. The last
+   is an abstraction with one call site so far; revisit it after three rounds.
+
 ## What this run got wrong
 
 - **It measured files, not behaviour.** "Byte-identical" and "missing" come from
@@ -78,5 +152,8 @@ snapshot).
   that lives only inside a long findings doc's body could be missed. The
   `REVIEW_doc_apparatus_2026-09-15*` set in `docs/external/` wasn't opened, and
   it is the outside review most likely to hold more candidates.
+- **The triage verdicts are my own judgement too.** In particular, R3 and R5
+  depart from the reply because of this template's own rules, and a reader who
+  weighs agent tampering more heavily could reasonably reverse them.
 - **The ranking is my own judgement.** Tier 1 means it was measured and is cheap
   to port. It does not mean the owner already wants it.
