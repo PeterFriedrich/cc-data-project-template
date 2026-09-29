@@ -31,11 +31,21 @@ channel nobody reads is not a guard.**
 
 ## Use it
 
+Copier creates the project; it is the first step, not something run later.
+
 ```bash
+pipx install copier       # once per machine; or: python3 -m pip install --user copier (Python >= 3.9)
 gh repo create <owner>/<new-project> --private --clone
 cd <new-project>
 copier copy --trust gh:<owner>/cc-data-project-template .
 ./bootstrap.sh            # hooks path, venv, first pytest, memory seed prompt
+```
+
+Later, to pull template improvements into the project, run from inside it, on
+a clean branch:
+
+```bash
+copier update --trust --defaults
 ```
 
 Not GitHub's "Use this template": that copies this repo's own backlog and

@@ -19,6 +19,7 @@ and `data/DATA.md` are written once and never touched by an update.
 ## New project
 
 ```bash
+pipx install copier   # once per machine; or: python3 -m pip install --user copier (Python >= 3.9)
 gh repo create PeterFriedrich/<new-project> --public --clone   # or --private
 cd <new-project>
 copier copy --trust gh:PeterFriedrich/cc-data-project-template .
