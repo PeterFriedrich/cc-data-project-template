@@ -19,3 +19,4 @@ locks, add a row; when one is superseded, strike it (`~~...~~`) or mark it
 
 | When | Decision | Full reasoning |
 |------|----------|----------------|
+| 2026-09-29 | **Claude web gets a brief generated from the repo, not a hand-written one** (owner, S03). `scripts/make_brief.py` builds it from `CLAUDE.md`, `docs/SCOPE.md`, `DECISIONS.md`, `TODO.md`, `DATA_ISSUES.md`; a public repo commits it as `docs/BRIEF.md` and syncs it into a private claude.ai Project, with `test_committed_brief_is_current` failing the gate when stale (falsified by `test_check_goes_red_when_a_source_changes`); a private repo pastes stdout, because the GitHub integration 404s on private repos (#98050). Deferred: `ingest_reply.py` (one call site). Rejected: the brief-less smallest slice for public repos, since the owner's main projects are public. | `docs/CLAUDE_WEB.md`; `docs/FINDINGS_harvest.md` §"D (spec sheet): recommendation" |
