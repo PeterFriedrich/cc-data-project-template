@@ -23,6 +23,7 @@ channel nobody reads is not a guard.**
 | `tools/retrieval_report.py` + Read/Grep/Glob hook | Pruning docs on a guess instead of a read log |
 | `steward` skill (read by the cloud harness on PR events) | Hourly check-ins burning turns overnight while a green PR waits on the owner's merge |
 | `scripts/make_brief.py` + `docs/SCOPE.md` + `docs/CLAUDE_WEB.md` | A Claude web chat briefed from a hand-typed, stale "my situation" block — the brief is generated from the repo's own ledgers and, when committed, gated fresh by `tests/test_brief.py` |
+| `copier.yml` + `docs/COPIER.md` + `tests/test_copier.py` | A project that never learns the template moved on — `copier update` merges template changes in, keeping the project's own edits |
 | `docs/WEB_CACHE_BUSTING.md` | A deploy that looks half-shipped because the browser kept a stale CSS/JS/data file |
 | `/project-audit` skill + `docs/AUDIT_LEDGER.md` | Audits that sweep broadly, re-run what was already run, or never record their verdict |
 | `docs/DECISIONS.md`, `docs/DATA_ISSUES.md`, `docs/TOKEN_EFFICIENCY.md`, `data/DATA.md` | Format contracts for the ledgers the guards read |
@@ -31,10 +32,16 @@ channel nobody reads is not a guard.**
 ## Use it
 
 ```bash
-gh repo create <owner>/<new-project> --template <owner>/cc-data-project-template --private --clone
+gh repo create <owner>/<new-project> --private --clone
 cd <new-project>
+copier copy --trust gh:<owner>/cc-data-project-template .
 ./bootstrap.sh            # hooks path, venv, first pytest, memory seed prompt
 ```
+
+Not GitHub's "Use this template": that copies this repo's own backlog and
+handoffs, and leaves nothing for `copier update` to pull template changes
+through later. Updating, and connecting a project made before copier:
+`docs/COPIER.md`.
 
 Then, in order:
 
@@ -48,5 +55,6 @@ Then, in order:
 - Any dataset, downloader, pipeline stage or rendering code.
 - A scheduled data-refresh workflow or a deploy workflow — add them when there
   is data to refresh and a site to deploy, each with its own pytest step.
-- A plugin/marketplace packaging of `.claude/`. Extract one the first time a
-  workflow fix has to be hand-copied into a second project.
+- A plugin/marketplace packaging of `.claude/`. Cloud sessions don't install
+  plugins a repo declares, so copier carries everything instead
+  (`docs/FINDINGS_harvest.md` §"C (sync direction): recommendation").
