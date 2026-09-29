@@ -1,0 +1,39 @@
+# Copier config: how a project is made from this template, and how template
+# changes reach it later (`copier update`). Setup and onboarding: docs/COPIER.md.
+#
+# This repo is two things at once: the template, and a project with its own
+# backlog, decisions and handoffs. Its OWN state must never reach an instance,
+# so it is excluded, and a skeleton `.jinja` beside each ledger renders the
+# empty version instead. Header changes to a skeleton still flow to instances
+# on update, merged like any other change.
+
+_min_copier_version: "9.0"
+_answers_file: .copier-answers.yml
+
+# No questions. Instances rewrite "the owner" to a name by hand; copier's
+# three-way merge keeps that edit on update, so it needs no variable (and a
+# templated name would stop this repo's own files from being usable here).
+
+_exclude:
+  # copier's defaults — setting _exclude replaces them
+  - copier.yml
+  - "~*"
+  - "*.py[co]"
+  - __pycache__
+  - .git
+  - .DS_Store
+  - .pytest_cache
+  # this repo's own state. TODO.md, docs/DECISIONS.md and docs/TODO_archive.md
+  # need no entry: copier skips a file whose `.jinja` sibling exists, and
+  # excluding them here would exclude the rendered skeleton too.
+  - /session-summary/*.md
+  - /docs/FINDINGS_*.md
+  - /docs/BRIEF.md
+  # tests this repo's copier config; meaningless in an instance
+  - /tests/test_copier.py
+
+# Written once at creation, then the instance's alone: never touched by update.
+_skip_if_exists:
+  - README.md
+  - docs/SCOPE.md
+  - data/DATA.md
