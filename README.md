@@ -23,7 +23,8 @@ channel nobody reads is not a guard.**
 | `tools/retrieval_report.py` + Read/Grep/Glob hook | Pruning docs on a guess instead of a read log |
 | `steward` skill (read by the cloud harness on PR events) | Hourly check-ins burning turns overnight while a green PR waits on the owner's merge |
 | `scripts/make_brief.py` + `docs/SCOPE.md` + `docs/CLAUDE_WEB.md` | A Claude web chat briefed from a hand-typed, stale "my situation" block — the brief is generated from the repo's own ledgers and, when committed, gated fresh by `tests/test_brief.py` |
-| `copier.yml` + `docs/COPIER.md` + `tests/test_copier.py` | A project that never learns the template moved on — `copier update` merges template changes in, keeping the project's own edits |
+| `copier.yml` + `docs/COPIER.md` + `tests/test_copier.py` | Template improvements that never reach a project — `copier update` merges them in, keeping the project's own edits |
+| `scripts/template_drift.py` (SessionStart hook) | A project that never learns the template moved on — the hook **names the changed files** and is silent when the project is current |
 | `docs/WEB_CACHE_BUSTING.md` | A deploy that looks half-shipped because the browser kept a stale CSS/JS/data file |
 | `/project-audit` skill + `docs/AUDIT_LEDGER.md` | Audits that sweep broadly, re-run what was already run, or never record their verdict |
 | `docs/DECISIONS.md`, `docs/DATA_ISSUES.md`, `docs/TOKEN_EFFICIENCY.md`, `data/DATA.md` | Format contracts for the ledgers the guards read |

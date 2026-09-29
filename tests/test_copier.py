@@ -72,3 +72,28 @@ def test_render_records_where_it_came_from(render):
     """`copier update` reads `_commit`; without it an instance can never update."""
     answers = (render / ".copier-answers.yml").read_text()
     assert "_commit:" in answers and "_src_path:" in answers
+
+
+def test_drift_notice_ignores_exactly_what_never_reaches_a_project(render):
+    """`scripts/template_drift.py` hardcodes which template paths never reach an
+    existing project (it runs in the instance, which has no copier.yml). If its
+    list falls behind copier.yml, sessions get notices for template-internal
+    edits (noise) or none for real ones (a silent miss)."""
+    import importlib.util
+    import yaml  # a copier dependency
+
+    spec = importlib.util.spec_from_file_location("template_drift", REPO / "scripts" / "template_drift.py")
+    drift = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(drift)
+
+    skip = set(yaml.safe_load((REPO / "copier.yml").read_text())["_skip_if_exists"])
+    tracked = _tracked()
+    rendered = _files(render)
+    wrong = []
+    for f in sorted(tracked):
+        name = f[: -len(SUFFIX)] if f.endswith(SUFFIX) else f
+        shadowed = not f.endswith(SUFFIX) and f"{f}{SUFFIX}" in tracked
+        reaches = ("{{" in name or name in rendered) and not shadowed and name not in skip
+        if drift.reaches_project(f) != reaches:
+            wrong.append(f"{f}: script says {drift.reaches_project(f)}, copier says {reaches}")
+    assert not wrong, "template_drift.IGNORED disagrees with copier.yml:\n" + "\n".join(wrong)

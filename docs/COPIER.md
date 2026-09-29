@@ -51,6 +51,27 @@ would turn every template change that forgot a new tag into one that silently
 never arrives. Leave it untagged; copier's "No git tags found in template;
 using HEAD as ref" warning is expected (`copier/_vcs.py` `get_latest_tag`).
 
+## When the session-start notice appears
+
+`scripts/template_drift.py` runs at every session start (`.claude/settings.json`)
+and says "Template update available: N file(s) …" when template files that
+reach this project changed since `_commit`. It is silent when the project is
+current, and silent when it can't check (no network, local `_src_path`) — so
+silence is not proof of being current.
+
+The notice is information, not an instruction. **Template updates are
+evaluated, not applied blindly:**
+
+1. Tell the owner; don't run the update unasked or mid-way through other work.
+2. Read the compare link in the notice. For each change, decide: take it,
+   adapt it, or decline it — the template is generic, this project may have
+   a reason to differ.
+3. On a clean branch, run **Pull template changes** above. Before committing,
+   revert the hunks you decline (`git checkout -p`). A declined change is not
+   re-offered: the next update starts from the new `_commit`, so it stays
+   declined. Record a substantive decline in `docs/DECISIONS.md`.
+4. Run the tests, commit, open a PR listing what was taken and what declined.
+
 ## Connect a project made before copier
 
 A project created from the template by hand has no `.copier-answers.yml`, so
