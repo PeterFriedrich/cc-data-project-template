@@ -43,7 +43,7 @@ Sync, and nothing on the web side can notice it is stale. Run:
 
 ```bash
 last=$(git log -1 --format=%H -- session-summary/)
-git fetch -q origin && git log --oneline ${last:+$last..}origin/master -- docs/BRIEF.md 'docs/SPEC_*.md' docs/ARCHITECTURE.md
+git fetch -q origin && git log --oneline ${last:+$last..}origin/master -- docs/BRIEF.md 'docs/SPEC_*.md' docs/ARCHITECTURE.md data/DATA.md
 ```
 
 Any output → Next Steps item 1 is "**Press Sync in the claude.ai Project**

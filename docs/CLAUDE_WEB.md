@@ -31,9 +31,10 @@ docs sync as they are — they are the real thing, not a summary:
 - `docs/BRIEF.md` — generated, always
 - `docs/SPEC_*.md` — each one, once written
 - `docs/ARCHITECTURE.md` — once written
+- `data/DATA.md` — the data sources and their quirks
 
 In git pathspec form (the handoff skill uses this exact list):
-`docs/BRIEF.md 'docs/SPEC_*.md' docs/ARCHITECTURE.md`. A project that syncs
+`docs/BRIEF.md 'docs/SPEC_*.md' docs/ARCHITECTURE.md data/DATA.md`. A project that syncs
 another file adds it in three places together: here, the handoff skill's
 command (`.claude/skills/handoff/SKILL.md` §"Claude web sync check"), and the
 claude.ai Project.
