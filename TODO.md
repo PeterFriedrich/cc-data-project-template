@@ -13,6 +13,8 @@ symptom and re-measure the stated cause before acting on it.
 ### Template improvement (opened 2026-09-29)
 
 - [ ] **A. Harvest from active repos.** Read `edmonton-tax-viz` (main source), `physics_sim`/`chemistry_sim`, `PeterFriedrich.github.io` for apparatus that postdates the extraction; read `alberta-regional-viz`/`edmonton-permit-speed` for *drift* (what a fresh instance had to customise at once = template gap). Output: a ranked candidate list, each tagged generic vs project-specific, in `docs/FINDINGS_harvest.md`. Done when the owner has approved/declined each candidate; porting is follow-up items.
+- [ ] **E. Onboard instances to copier.** (opened 2026-09-29, S03; restored 2026-09-30 — it was glued onto item C's line by an edit and archived with it.) `alberta-regional-viz`: **connected** (its PR #1, `_commit: 9ded929`, SCOPE.md + BRIEF.md on master); the #14 update was handed to an alberta session 2026-09-30. `edmonton-permit-speed`: not started — same procedure (`docs/COPIER.md` §"Connect a project made before copier"; find its base commit first, it was made 2026-09-25). Done when both are on master at the template's current `_commit`.
+
 ## Done
 
 Closed items moved out of `## Open work` live in **`docs/TODO_archive.md`** — one line each below, reasoning there.
