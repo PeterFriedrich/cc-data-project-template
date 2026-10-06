@@ -27,6 +27,7 @@ _exclude:
   # need no entry: copier skips a file whose `.jinja` sibling exists, and
   # excluding them here would exclude the rendered skeleton too.
   - /session-summary/*.md
+  - /session-summary/archive/*.md
   - /docs/FINDINGS_*.md
   - /docs/BRIEF.md
   # tests this repo's copier config; meaningless in an instance
