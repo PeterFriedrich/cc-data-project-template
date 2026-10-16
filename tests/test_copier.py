@@ -80,7 +80,7 @@ def test_drift_notice_ignores_exactly_what_never_reaches_a_project(render):
     list falls behind copier.yml, sessions get notices for template-internal
     edits (noise) or none for real ones (a silent miss)."""
     import importlib.util
-    import yaml  # a copier dependency
+    import yaml  # noqa: requirements -- a copier dependency; this test never reaches an instance
 
     spec = importlib.util.spec_from_file_location("template_drift", REPO / "scripts" / "template_drift.py")
     drift = importlib.util.module_from_spec(spec)

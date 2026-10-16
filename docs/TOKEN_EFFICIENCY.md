@@ -110,7 +110,10 @@ venvs, downloads) that ended sessions had left in their scratchpads, about
   ```
 
   Pin anything missing in `requirements.txt` and commit it first. Then
-  rebuild. (Without uv: `.venv/bin/python -m pip freeze`.)
+  rebuild. (Without uv: `.venv/bin/python -m pip freeze`.) The merge gate's
+  `scripts/check_requirements.py` already fails on an unpinned *import*; this
+  diff is for what it can't see: CLI tools such as pip-audit, and packages
+  loaded by name at runtime.
 
 ## Going forward
 
