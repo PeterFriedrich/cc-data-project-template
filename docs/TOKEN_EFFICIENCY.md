@@ -104,7 +104,7 @@ venvs, downloads) that ended sessions had left in their scratchpads, about
   dependencies, so read it for what the code imports:
 
   ```bash
-  norm() { cut -d= -f1 | tr 'A-Z_' 'a-z-' | sort -u; }
+  norm() { cut -d= -f1 | tr 'A-Z_.' 'a-z--' | sort -u; }
   comm -23 <(uv pip freeze --python .venv/bin/python | norm) \
            <(grep -oE '^[A-Za-z0-9_.-]+' requirements.txt | norm)
   ```
