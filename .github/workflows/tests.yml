@@ -59,3 +59,8 @@ jobs:
       # the venv cannot silently drop a package installed by hand.
       - name: Check requirements cover imports
         run: python scripts/check_requirements.py
+
+      # Every assumptions-index row has a known status, a size and a pointer, and a
+      # VERIFIED row names a test that exists. Completeness is each project's own test.
+      - name: Check assumptions index
+        run: python scripts/check_assumptions.py
