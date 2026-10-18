@@ -38,3 +38,5 @@ _skip_if_exists:
   - README.md
   - docs/SCOPE.md
   - data/DATA.md
+  # projects that index assumptions before adopting it keep their own rows
+  - docs/ASSUMPTIONS.md
