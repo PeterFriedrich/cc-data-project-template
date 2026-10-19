@@ -107,7 +107,8 @@ Then, in order:
 1. Fill every `<placeholder>` in `CLAUDE.md`, `TODO.md`, `data/DATA.md`.
 2. Write `docs/SPEC_phase1.md` before any code (`CONTRIBUTING.md`).
 3. Keep `requirements-ci.txt` to what the merge gate needs.
-4. Delete this section of the README and describe the project.
+4. Answer `docs/CHANGE_PIPELINE.md` §"This project's fit".
+5. Delete this section of the README and describe the project.
 
 ## What is deliberately NOT here
 
