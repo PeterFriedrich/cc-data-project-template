@@ -40,6 +40,14 @@ PRs merge within minutes of each other. If the job is renamed, update the requir
 too, or every PR waits on a check that never reports. GitHub's free plan has no branch
 protection for private repos, so skip this step there.
 
+⚠️ **A workflow that pushes to `master` itself** (a scheduled data refresh that commits
+its output) is blocked by a required check, because its commit has no passing `test`
+yet. Before turning protection on, have it push with a fine-grained token of an admin
+(`enforce_admins: false` lets an admin's push through), not `GITHUB_TOKEN`.
+`edmonton-tax-viz` does this with a `HEARTBEAT_TOKEN` secret (its `docs/RUNBOOK.md`).
+A token push, unlike `GITHUB_TOKEN`, does trigger workflows, so the commit must stage
+only data paths that the deploy workflow ignores, or each refresh redeploys itself.
+
 Then answer `docs/CHANGE_PIPELINE.md` §"This project's fit" for the new project.
 
 Use this instead of GitHub's "Use this template": that copies the template
