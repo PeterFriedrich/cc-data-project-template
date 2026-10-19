@@ -68,7 +68,8 @@ template has no data to ship, so each project fills it in.
 | | A bug-fix PR names its cause, apart from the symptom | `CHANGE_PIPELINE.md` step 2.2 | Habit |
 | | AI review on every PR, server-side (Code Review for Claude Code) | — | Not available: Team and Enterprise plans only, and this owner is on Pro. The local `/code-review` trial stands in |
 | | A PR touching a claude.ai-synced file says so first | `CLAUDE.md` | Habit |
-| | Security review: `/security-review` | — | **Missing**; matters most for deploy workflows and secrets |
+| | Security review: `/security-review` on risky paths (workflows, deploy, secrets, data added to a public repo, outside data rendered as HTML) | `CHANGE_PIPELINE.md` step 1.7; each project lists its paths | Habit |
+| | A security finding blocks the merge in CI (the open-source security review Action) | — | Declined: it needs a separately billed API key, and the surface is small (one admin token, in `edmonton-tax-viz`'s `refresh.yml`) |
 | **Merging** | The owner merges on green CI. No person or bot reads the diff | — | As is; `/code-review` is the trial above |
 | | No push to a branch whose PR already merged | `.githooks/pre-push`; `handoff_gap.py` says at session start when `core.hooksPath` isn't set | Enforced (fails open) |
 | | Checks rerun on the latest `master` before merge (merge queue) | — | **Missing**; branches needn't be up to date, so CI on the `master` push catches a bad combination after the fact |
