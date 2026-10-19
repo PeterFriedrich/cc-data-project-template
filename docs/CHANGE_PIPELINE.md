@@ -26,10 +26,15 @@ own copy; `copier update` keeps that edit.
    `docs/ASSUMPTIONS.md`**, pointing at the evidence.
 5. **Verify, and show the output.** Run `python -m pytest tests -q` and every
    `scripts/check_*.py`. Say what ran and what it returned, not that it passed.
-   Passing tests are not the result in a data project. **A change that moves a
-   published number shows the old and new value and why it moved** (*per
-   project*: which numbers count as published, and the command that prints
-   them).
+   Run them after your last edit, and on the built output when something is
+   served: a check from before the final edit verified a different file.
+   - Passing tests are not the result in a data project. **A change that moves
+     a published number shows the old and new value and why it moved.** Build
+     both sides from one raw data pull, or a data refresh is blamed on the
+     code change. Show totals and the largest movers, not every row: a
+     citywide total can move 0.2% while one area moves 130%.
+   - *Per project*: which tiers count as published (served data, numbers in
+     the page copy, report figures), and the command that prints them.
 6. **Break each new or changed guard on purpose.** Revert the fix or mutate
    the check, confirm its test goes red, then restore it. A test that passes
    either way guards nothing; on template PR #37 this caught one.
@@ -43,8 +48,13 @@ own copy; `copier update` keeps that edit.
    - One round per PR. Re-review only after a substantial fix.
 8. **A kind of finding seen twice is fixed at the source**, not by hand a
    third time. When `/code-review` or an audit flags the same kind of problem
-   on a second PR, add a guard, a `CLAUDE.md` line or a `REVIEW.md` line in
-   that PR, or tell the owner why not.
+   on a second PR, fix it at the source in that PR, or tell the owner why not.
+   - Prefer a guard or hook. A `CLAUDE.md` or `REVIEW.md` line is for when no
+     mechanism fits: in `edmonton-tax-viz` a written rule twice failed to stop
+     pushes to merged branches, and only `.githooks/pre-push` did. Say which
+     you chose and why.
+   - Twice can be a coincidence. Before proposing a guard, say how often this
+     kind of problem actually occurs; a "why not" answer gives that rate too.
 9. **Commit each working unit** with a descriptive message.
 
 ## 2. The PR
