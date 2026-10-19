@@ -46,6 +46,11 @@ own copy; `copier update` keeps that edit.
    - `low`: tooling, guards, tests.
    - `ultra`: only when the owner starts it; it is billed.
    - One round per PR. Re-review only after a substantial fix.
+   - **A real finding this diff didn't introduce is pre-existing.** Don't fix
+     it in this PR (the smallest-change rule); open a `TODO.md` item, or a
+     `docs/DATA_ISSUES.md` / `docs/ASSUMPTIONS.md` row if it is about data.
+     Old silent errors surface here, and without a home they either swell
+     the PR or get dropped.
 8. **A kind of finding seen twice is fixed at the source**, not by hand a
    third time. When `/code-review` or an audit flags the same kind of problem
    on a second PR, fix it at the source in that PR, or tell the owner why not.
@@ -63,8 +68,10 @@ own copy; `copier update` keeps that edit.
    minutes, and a branch whose PR merged is dead (`.githooks/pre-push` blocks
    pushing to it).
 2. **Open the description with a `Code review:` line** (*trial*, with 1.7): the level, the
-   finding count, and what happened to them ("medium, 3 findings: 2 fixed, 1
-   intended"), or "skipped (docs only)".
+   finding count, and what happened to them ("medium, 4 findings: 2 fixed, 1
+   intended, 1 pre-existing → TODO M"), or "skipped (docs only)".
+   **A PR that fixes a bug names its cause in one line**, apart from the
+   symptom. Step 1.8 spots repeats by cause, not by symptom.
 3. **A PR that changes a claude.ai-synced file** (`docs/BRIEF.md`,
    `docs/SPEC_*.md`, `docs/ARCHITECTURE.md`, `data/DATA.md`) opens with
    "After merge: press Sync in the claude.ai Project." and the paths, one per
@@ -142,6 +149,8 @@ the point: it shows the owner a gap, such as `master` with no required check.
 | | Commit each working unit | not evaluated |
 | The PR | A fresh branch from `origin/master` per PR | not evaluated |
 | | `Code review:` line in the description (trial) | not evaluated |
+| | Pre-existing findings go to `TODO.md` or a ledger, not this PR | not evaluated |
+| | A bug-fix PR names its cause | not evaluated |
 | | Sync note for claude.ai-synced files | not evaluated |
 | | CI green, and `master` requires the `test` check | not evaluated |
 | | No timed PR check-ins | not evaluated |
