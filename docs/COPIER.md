@@ -97,6 +97,13 @@ evaluated, not applied blindly:**
    project's fit", answer those rows for this project before committing:
    `adopted`, `later: <trigger>`, `no: <reason>` or `n/a`. Keep earlier
    answers.
+   ⚠️ **Expect the whole table to come back as one conflict block**: your
+   answered rows on one side, the template's `not evaluated` rows on the
+   other (seen in a dry run on `edmonton-civic-map`, 2026-10-19). Taking
+   either side whole loses data silently: all your answers, or the new rows.
+   Start from the template's side, copy each earlier answer back by its Step
+   name, then answer the rows still `not evaluated`. Check that no row from
+   either side went missing, then remove the markers.
 5. Run the tests, commit, open a PR listing what was taken, what declined,
    and the new fit answers.
 
