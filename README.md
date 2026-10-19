@@ -34,6 +34,14 @@ channel nobody reads is not a guard.**
 
 ## How a change goes, and where each step stands
 
+The pipeline exists to spend the owner's attention only where a person is
+needed: plans, the stop-and-ask points, and calls a guard can't make. Guards
+and review catch the rest. Cutting review time is no saving if the time
+reappears as fixes after a merge, so that count is the guardrail: if it rises,
+a lighter step is costing more than it saves. The owner's time doesn't show on
+GitHub (PRs merge within minutes with no comments), so the post-merge fix
+count is the one measure here.
+
 As of 2026-10-19. The steps an agent follows, in order, are in
 `docs/CHANGE_PIPELINE.md`; this table says how far along each one is. **Change
 both in the PR that changes a step.** *Enforced* means a hook, test or CI step
@@ -64,6 +72,7 @@ template has no data to ship, so each project fills it in.
 | | Publish, with a gate before it ships | per project | Per project (`edmonton-tax-viz`: weekly `refresh.yml`, gated by verified notebooks) |
 | | Seen before the public build | per project | Per project (`edmonton-tax-viz`: the full build vs the public map) |
 | | Watch and roll back | automated issues, `git revert` | Habit: issues are read only at session start; no on-call |
+| | Fixes after a merge are counted (the guardrail) | per project | Per project; no project measures it yet |
 | | A defect in someone else's data is logged with whether the publisher was told | `DATA_ISSUES.md` | Habit |
 
 Around the changes, per session:
