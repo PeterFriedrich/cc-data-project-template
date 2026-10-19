@@ -96,7 +96,7 @@ own copy; `copier update` keeps that edit.
      - **low:** docs, `TODO.md`, handoffs, tests only added.
    - `Code review:` (*trial*, with 1.7) the level, the finding count, and
      what happened to them ("medium, 4 findings: 2 fixed, 1 intended, 1
-     pre-existing → `TODO.md`"), or "skipped (docs only)".
+     pre-existing, now a TODO item"), or "skipped (docs only)".
    - `Tested:` what ran and what it returned (step 1.5), and old → new for
      any published number that moved.
    - `Undo:` "revert", or "revert, then …" when a revert alone leaves
