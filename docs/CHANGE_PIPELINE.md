@@ -88,3 +88,41 @@ own copy; `copier update` keeps that edit.
 - Anything that would push to `master`, rewrite history, or delete data.
 - A permission your session was denied. Take it to the owner; don't ask
   another session to do it.
+
+## This project's fit
+
+Each project answers this table for itself; the template ships every row as
+`not evaluated`. Replace it with one of:
+- `adopted`, plus the mechanism (`tests.yml`, a hook, a habit);
+- `later: <trigger>`, the event that would make it worth doing;
+- `no: <reason>`;
+- `n/a`, plus why it can't apply.
+
+**When to answer:** at project creation, and in any `copier update` that adds
+or changes a row here (`docs/COPIER.md` §"When the session-start notice
+appears"). List the new answers in that PR's description. An honest `no` is
+the point: it shows the owner a gap, such as `master` with no required check.
+
+| Stage | Step | This project |
+|---|---|---|
+| Before the PR | Plan first for a new module, schema or CI change | not evaluated |
+| | Reproduce before fixing | not evaluated |
+| | A decision that protects a number is a test first | not evaluated |
+| | Unproven premises indexed in `docs/ASSUMPTIONS.md` | not evaluated |
+| | Verify, and show the output | not evaluated |
+| | Break each new or changed guard on purpose | not evaluated |
+| | Review the diff with `/code-review` (trial) | not evaluated |
+| | Commit each working unit | not evaluated |
+| The PR | A fresh branch from `origin/master` per PR | not evaluated |
+| | `Code review:` line in the description (trial) | not evaluated |
+| | Sync note for claude.ai-synced files | not evaluated |
+| | CI green, and `master` requires the `test` check | not evaluated |
+| | No timed PR check-ins | not evaluated |
+| Merging | The owner merges | not evaluated |
+| | Pre-push hook enabled (`git config core.hooksPath .githooks`) | not evaluated |
+| | Work confirmed on `master` with `git merge-base` | not evaluated |
+| After the merge | Template changes pulled by `copier update` | not evaluated |
+| | Publish, with a gate before it ships | not evaluated |
+| | Seen before the public build | not evaluated |
+| | Watch and roll back | not evaluated |
+| | Upstream data defects logged in `docs/DATA_ISSUES.md` | not evaluated |
