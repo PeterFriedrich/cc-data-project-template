@@ -64,6 +64,9 @@ template has no data to ship, so each project fills it in.
 | | Every third-party import is pinned | `check_requirements.py` | Enforced |
 | | Doc citations resolve; no line numbers | `check_doc_citations.py` | Enforced |
 | | The description opens with a `Code review:` line | — | Trial, with `/code-review` |
+| | A pre-existing finding goes to `TODO.md` or a ledger, not into the PR | `CHANGE_PIPELINE.md` step 1.7 | Habit |
+| | A bug-fix PR names its cause, apart from the symptom | `CHANGE_PIPELINE.md` step 2.2 | Habit |
+| | AI review on every PR, server-side (Code Review for Claude Code) | — | Not available: Team and Enterprise plans only, and this owner is on Pro. The local `/code-review` trial stands in |
 | | A PR touching a claude.ai-synced file says so first | `CLAUDE.md` | Habit |
 | | Security review: `/security-review` | — | **Missing**; matters most for deploy workflows and secrets |
 | **Merging** | The owner merges on green CI. No person or bot reads the diff | — | As is; `/code-review` is the trial above |
