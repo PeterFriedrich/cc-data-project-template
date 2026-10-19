@@ -5,9 +5,17 @@ your first PR of a session.** Each step says what to run and when to stop and
 ask the owner. The rules themselves live in `CLAUDE.md` and the scripts named
 here; this doc puts them in sequence and doesn't restate them.
 
-Step status is in the README (§"How a change goes, and where each step
-stands"): which steps a hook or CI enforces, and which hold only while you
-remember them. **If you change a step, change both, in the same PR.**
+**What it's for:** spend the owner's attention only where a person is
+needed (plans, the stop-and-ask points, calls a guard can't make) and let
+guards and review catch the rest. Saving review time is no saving if it comes
+back as fixes after a merge, so that count is the guardrail (step 4.5).
+Weigh a step you'd skip or a row you'd answer `no` against it.
+
+Step status, meaning which steps a hook or CI enforces and which hold only
+while you remember them, lives in two places. In the template it's the README
+(§"How a change goes, and where each step stands"), and a PR that changes a
+step changes both. In a project it's §"This project's fit" below, since a
+project's README doesn't carry the template's table.
 
 The steps marked *per project* are filled in by each project, because the
 template has no data to publish. A project replaces those placeholders in its
