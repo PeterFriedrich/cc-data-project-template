@@ -59,7 +59,7 @@ template has no data to ship, so each project fills it in.
 | | A second agent reviews the diff: `/code-review` | — | **Trial** in `edmonton-tax-viz`; the gate is TODO J |
 | | A kind of finding seen twice is fixed at the source (a guard, `CLAUDE.md`, `REVIEW.md`) | `CHANGE_PIPELINE.md` step 1.8 | Habit |
 | | Each new or changed guard is broken on purpose, and its test goes red | `CHANGE_PIPELINE.md` step 1.6 | Habit |
-| | Lint and type checks | — | Declined for now: no bug in this project or `edmonton-tax-viz` has been traced to the lack of one, and these projects fail by silent correctness, which a linter doesn't catch |
+| | Lint and type checks | — | Declined for now: these projects fail by silent correctness, which a linter doesn't catch. Checked 2026-10-19: ruff's F and B rules over `edmonton-tax-viz` (about 21k lines plus 11 notebooks) found no bugs, only unused imports and the like; its 7 `zip()` calls without `strict=` all pair equal-length columns |
 | **On every PR** | CI: pytest plus four guards; `master` requires the `test` check | `tests.yml`, branch protection | Enforced |
 | | Every third-party import is pinned | `check_requirements.py` | Enforced |
 | | Doc citations resolve; no line numbers | `check_doc_citations.py` | Enforced |
