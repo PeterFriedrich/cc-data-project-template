@@ -27,8 +27,41 @@ channel nobody reads is not a guard.**
 | `scripts/template_drift.py` (SessionStart hook) | A project that never learns the template moved on — the hook **names the changed files** and is silent when the project is current |
 | `docs/WEB_CACHE_BUSTING.md` | A deploy that looks half-shipped because the browser kept a stale CSS/JS/data file |
 | `/project-audit` skill + `docs/AUDIT_LEDGER.md` | Audits that sweep broadly, re-run what was already run, or never record their verdict |
+| `scripts/check_requirements.py` | A venv rebuild silently dropping a package someone installed by hand |
+| `docs/ASSUMPTIONS.md` + `scripts/check_assumptions.py` | Unproven premises scattered across five docs; a VERIFIED claim whose test is gone |
 | `docs/DECISIONS.md`, `docs/DATA_ISSUES.md`, `docs/TOKEN_EFFICIENCY.md`, `data/DATA.md` | Format contracts for the ledgers the guards read |
 | `.github/workflows/tests.yml` | A merge gate that is offline, secret-free, and therefore never ignored for flaking |
+
+## How a change goes, and where each step stands
+
+As of 2026-10-19. **Update this table in the PR that changes a step.**
+*Enforced* means a hook, test or CI step fails or speaks without being asked.
+*Habit* means a written rule that nothing checks: it holds only while a session
+remembers it.
+
+| Step | What happens | Mechanism | Status |
+|---|---|---|---|
+| **Session start** | Commits since the last handoff are named | `handoff_gap.py` (SessionStart hook) | Enforced |
+| | Template changes the project hasn't pulled are named | `template_drift.py` (SessionStart hook) | Enforced |
+| | Open GitHub issues are read | `gh issue list` rule in `CLAUDE.md` | Habit; a hook is TODO H |
+| | `TODO.md` and the latest handoff are read | `CLAUDE.md` | Habit |
+| **Before code** | Plan first for a new module, a schema change or a CI change; a spec before any code | `CLAUDE.md`, `CONTRIBUTING.md` | Habit |
+| **Writing** | A decision that protects a number gets a test, and its row cites it | `check_decisions_log.py` | Enforced (the test exists; not that it tests the decision) |
+| | Every third-party import is pinned | `check_requirements.py` | Enforced |
+| | Doc citations resolve; no line numbers | `check_doc_citations.py` | Enforced |
+| | An unproven premise gets a row in `docs/ASSUMPTIONS.md` | `check_assumptions.py` | Format enforced; adding the row is habit; completeness is a per-project test |
+| **Before the PR** | Tests and guards run locally | `pytest`, the `scripts/check_*.py` | Habit (CI catches it anyway) |
+| | The diff gets a `/code-review`, and the PR body opens with a `Code review:` line | — | **Trial** in `edmonton-tax-viz`; the gate is TODO J |
+| **PR** | CI: pytest plus the four guards; `master` requires the `test` check | `tests.yml`, branch protection | Enforced |
+| | A PR touching a claude.ai-synced file says so first | `CLAUDE.md` | Habit |
+| **Push** | No push to a branch whose PR already merged | `.githooks/pre-push` | Enforced (fails open) |
+| **Merge** | The owner merges on green CI. No person or bot reads the diff | — | As is; `/code-review` is the trial above |
+| | Work confirmed on `master` with `git merge-base --is-ancestor` | `CLAUDE.md` | Habit |
+| **To projects** | Template changes reach projects by `copier update` | `copier.yml`, `template_drift.py` | Enforced notice; the update is run by hand |
+| **Audit** | One target per run, a ledger row after; indexed assumptions are known, not new findings | `project-audit` skill, `AUDIT_LEDGER.md` | On request only |
+| | The audit skill is scored against bugs already confirmed | — | Planned, TODO K |
+| **Upstream data** | A defect in someone else's data is logged with whether the publisher was told | `DATA_ISSUES.md` | Habit |
+| **Session end** | `/handoff` before `/clear`; the SessionEnd hook names what's owed | `handoff` skill, `handoff_gap.py` | Enforced notice; the handoff is habit |
 
 ## Use it
 
