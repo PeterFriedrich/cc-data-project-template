@@ -29,6 +29,7 @@ channel nobody reads is not a guard.**
 | `/project-audit` skill + `docs/AUDIT_LEDGER.md` | Audits that sweep broadly, re-run what was already run, or never record their verdict |
 | `scripts/check_requirements.py` | A venv rebuild silently dropping a package someone installed by hand |
 | `docs/ASSUMPTIONS.md` + `scripts/check_assumptions.py` | Unproven premises scattered across five docs; a VERIFIED claim whose test is gone |
+| `scripts/check_fit_table.py` | A `copier update` conflict resolved by taking one side whole, silently dropping the project's pipeline answers or the template's new steps |
 | `docs/DECISIONS.md`, `docs/DATA_ISSUES.md`, `docs/TOKEN_EFFICIENCY.md`, `data/DATA.md` | Format contracts for the ledgers the guards read |
 | `.github/workflows/tests.yml` | A merge gate that is offline, secret-free, and therefore never ignored for flaking |
 
@@ -60,7 +61,7 @@ template has no data to ship, so each project fills it in.
 | | A kind of finding seen twice is fixed at the source (a guard, `CLAUDE.md`, `REVIEW.md`) | `CHANGE_PIPELINE.md` step 1.8 | Habit |
 | | Each new or changed guard is broken on purpose, and its test goes red | `CHANGE_PIPELINE.md` step 1.6 | Habit |
 | | Lint and type checks | — | Declined for now: these projects fail by silent correctness, which a linter doesn't catch. Checked 2026-10-19: ruff's F and B rules over `edmonton-tax-viz` (about 21k lines plus 11 notebooks) found no bugs, only unused imports and the like; its 7 `zip()` calls without `strict=` all pair equal-length columns |
-| **On every PR** | CI: pytest plus four guards; `master` requires the `test` check | `tests.yml`, branch protection | Enforced |
+| **On every PR** | CI: pytest plus five guards; `master` requires the `test` check | `tests.yml`, branch protection | Enforced |
 | | Every third-party import is pinned | `check_requirements.py` | Enforced |
 | | Doc citations resolve; no line numbers | `check_doc_citations.py` | Enforced |
 | | The description opens with a `Code review:` line | — | Trial, with `/code-review` |
