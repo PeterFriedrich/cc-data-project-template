@@ -105,7 +105,9 @@ evaluated, not applied blindly:**
    name, then answer the rows still `not evaluated`. Check that no row from
    either side went missing, then remove the markers.
    `scripts/check_fit_table.py` (in CI) fails on a leftover marker, a missing
-   or repeated step, or an empty answer.
+   or repeated step, an empty answer, or, on a PR, an answer the base branch
+   had that is now `not evaluated`. Run it locally before committing with
+   `--base HEAD`.
 5. Run the tests, commit, open a PR listing what was taken, what declined,
    and the new fit answers.
 

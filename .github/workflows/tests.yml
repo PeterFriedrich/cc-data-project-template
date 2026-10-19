@@ -66,6 +66,13 @@ jobs:
         run: python scripts/check_assumptions.py
 
       # A copier update returns the fit table as one conflict block; taking either
-      # side whole drops the project's answers or the template's new rows.
+      # side whole drops the project's answers or the template's new rows. On a
+      # PR it also compares with the base branch, the only way to see answers
+      # wiped back to `not evaluated`. A failed fetch skips that (fails open).
       - name: Check change-pipeline fit table
-        run: python scripts/check_fit_table.py
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          base=""
+          if [ -n "$BASE_REF" ] && git fetch -q origin "$BASE_REF"; then base="--base FETCH_HEAD"; fi
+          python scripts/check_fit_table.py $base

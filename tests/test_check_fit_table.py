@@ -1,5 +1,7 @@
 """Tests for scripts/check_fit_table.py: a template update can't silently drop fit-table rows."""
 
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -102,3 +104,60 @@ def test_another_sections_table_is_not_the_fit_table(tmp_path):
         "## This project's fit\n\nIntro, table gone.\n\n## Other\n\n" + HEADER + _all())
     failures, _ = cf.check(tmp_path)
     assert len(failures) == len(cf.FIT_STEPS) and all("missing" in f for f in failures)
+
+
+def _git(repo, *args):
+    subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True,
+                   env={**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+                        "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"})
+
+
+def _committed(tmp_path, body: str):
+    repo = _repo(tmp_path, body)
+    _git(repo, "init", "-q")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "base")
+    return repo
+
+
+def _rewrite(repo, body: str):
+    p = repo / cf.PIPELINE
+    head, _, _ = p.read_text().partition(HEADER)
+    p.write_text(head + HEADER + body + "\n## After\n\ntext\n")
+
+
+def test_answers_wiped_to_not_evaluated_fail_against_base(tmp_path):
+    """Keeping the template's side whole: a well-formed table, every answer gone."""
+    repo = _committed(tmp_path, _all())
+    _rewrite(repo, _all("not evaluated"))
+    assert cf.check(repo)[0] == []  # invisible without a base
+    failures, _ = cf.check(repo, base="HEAD")
+    assert len(failures) == len(cf.FIT_STEPS) and all("was answered at `HEAD`" in f for f in failures)
+
+
+def test_changed_answers_pass_against_base(tmp_path):
+    """Revising an answer, or stepping back to `later:`, is still answered."""
+    repo = _committed(tmp_path, _all())
+    _rewrite(repo, _all("later: when the trial starts"))
+    assert cf.check(repo, base="HEAD") == ([], 0)
+
+
+def test_new_rows_not_evaluated_pass_against_base(tmp_path):
+    """The correct merge: old answers kept, the template's new rows open."""
+    repo = _committed(tmp_path, "".join(_row(s) for s in cf.FIT_STEPS[:-1]))
+    _rewrite(repo, _all().replace(_row(cf.FIT_STEPS[-1]), _row(cf.FIT_STEPS[-1], "not evaluated")))
+    assert cf.check(repo, base="HEAD") == ([], 1)
+
+
+def test_unreadable_base_skips_the_comparison(tmp_path, capsys):
+    repo = _repo(tmp_path, _all("not evaluated"))  # not a git repo
+    assert cf.check(repo, base="origin/master") == ([], len(cf.FIT_STEPS))
+    assert "skipped the comparison" in capsys.readouterr().out
+
+
+def test_wiped_later_answer_fails_against_base(tmp_path):
+    """`later: <trigger>` is an answer too; losing it is a loss."""
+    repo = _committed(tmp_path, _all("later: when the trial starts"))
+    _rewrite(repo, _all("not evaluated"))
+    failures, _ = cf.check(repo, base="HEAD")
+    assert len(failures) == len(cf.FIT_STEPS)

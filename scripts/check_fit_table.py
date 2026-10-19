@@ -14,6 +14,11 @@ data silently, so this checks:
      once in the table's Step column, matched by name: the Stage cell is blank
      on continuation rows.
   3. **EVERY ROW ANSWERED.** The answer cell isn't empty.
+  4. **NO ANSWER GOES BACK TO ``not evaluated``** (with ``--base <ref>``, which
+     CI passes on a PR). Keeping the template's side of the conflict whole
+     wipes every answer yet leaves a well-formed table, so only a comparison
+     with the base shows it. A project stepping back writes ``later: <trigger>``,
+     which is still an answer. Fails open: an unreadable ref skips this check.
 
 Allowed on purpose: rows a project adds for its own steps (and a row whose step
 the template later drops), and ``not evaluated``, which is counted, not failed:
@@ -28,11 +33,13 @@ Exit codes: 0 ok; 9 a check fails (2 is argparse's).
 
 Usage:
     python scripts/check_fit_table.py
+    python scripts/check_fit_table.py --base origin/master
     python scripts/check_fit_table.py --root /path/to/checkout
 """
 
 import argparse
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -102,8 +109,23 @@ def fit_rows(md: str) -> list[tuple[int, list[str]]] | None:
     return rows[1:]  # drop the header
 
 
-def check(root: Path = ROOT) -> tuple[list[str], int]:
-    """(failures, rows still `not evaluated`)."""
+def at_ref(root: Path, ref: str) -> str | None:
+    """The pipeline doc as committed at ``ref``, or None when git can't say."""
+    try:
+        r = subprocess.run(["git", "-C", str(root), "show", f"{ref}:{PIPELINE}"],
+                           capture_output=True, text=True, timeout=20)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
+def answered(rows: list[tuple[int, list[str]]]) -> set[str]:
+    return {r[1] for _, r in rows if len(r) > 2 and r[2].strip() and not UNANSWERED.match(r[2])}
+
+
+def check(root: Path = ROOT, base: str | None = None) -> tuple[list[str], int]:
+    """(failures, rows still `not evaluated`). With ``base``, also fail on an
+    answer that ``base`` had and this checkout lost to `not evaluated`."""
     path = root / PIPELINE
     if not path.is_file():
         return [], 0
@@ -129,18 +151,28 @@ def check(root: Path = ROOT) -> tuple[list[str], int]:
     for step, lines in where.items():
         if len(lines) > 1:
             failures.append(f"{PIPELINE}:{lines[1]}  `{step}` repeats line {lines[0]}")
+    if base:
+        old = at_ref(root, base)
+        if old is None:
+            print(f"NOTE  can't read {PIPELINE} at `{base}`; skipped the comparison")
+        else:
+            now_open = {r[1] for _, r in rows if len(r) > 2 and UNANSWERED.match(r[2])}
+            failures += [f"{PIPELINE}:{where[s][0]}  `{s}` was answered at `{base}` and is now "
+                         f"`not evaluated`: copy the answer back (a merge may have taken the template's side)"
+                         for s in sorted(answered(fit_rows(old) or []) & now_open)]
     return failures, unanswered
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--root", type=Path, default=ROOT)
+    p.add_argument("--base", help="git ref to compare answers against (CI: the PR's base branch)")
     return p.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    failures, unanswered = check(args.root)
+    failures, unanswered = check(args.root, args.base)
     for f in failures:
         print(f"FAIL  {f}")
     if failures:
