@@ -85,9 +85,18 @@ own copy; `copier update` keeps that edit.
 2. **The description opens with these lines**, after the Sync note if 2.3
    applies. They put what the session saw in front of the owner at merge
    time, without the transcript.
+   - `Risk:` the tier, set by the paths the diff touches, not by judgment:
+     the highest tier any path reaches, and that path ("high
+     (`.github/workflows/tests.yml`)"). *Per project*: each repo lists its
+     own paths in the fit table. Template defaults:
+     - **high:** `.github/workflows/`, deploy and publish scripts, a secret or
+       token, a data contract or output schema, `src/` code behind a
+       published number;
+     - **medium:** other `src/`, `scripts/`, tests that change;
+     - **low:** docs, `TODO.md`, handoffs, tests only added.
    - `Code review:` (*trial*, with 1.7) the level, the finding count, and
      what happened to them ("medium, 4 findings: 2 fixed, 1 intended, 1
-     pre-existing → TODO M"), or "skipped (docs only)".
+     pre-existing → `TODO.md`"), or "skipped (docs only)".
    - `Tested:` what ran and what it returned (step 1.5), and old → new for
      any published number that moved.
    - `Undo:` "revert", or "revert, then …" when a revert alone leaves
@@ -110,9 +119,25 @@ own copy; `copier update` keeps that edit.
 ## 3. Merging
 
 1. **The owner merges.** Don't merge your own PR unless the owner asked you to.
-2. **Before every push to an existing branch, check whether its PR merged**
+   What the `Risk:` tier asks:
+   - **low:** merge on green.
+   - **medium:** as usual.
+   - **high:** `/code-review` (and `/security-review` where 1.7's paths say)
+     has run, the description names the files or hunks to read, and the
+     owner reads the diff before merging. There is one person, so no tier
+     needs two; an agent's approval never stands in for the owner's.
+
+   *Trial from 2026-10-19:* the tier is a label only and the owner still
+   merges every PR. If, after about two weeks, no low-tier PR needed anything
+   after the owner looked, sessions may merge their own low-tier PRs on green
+   (template TODO M).
+2. **A push after the owner has looked says so.** If you push to a PR the
+   owner has already looked at or approved, comment on the PR before they
+   merge: "new commit since you looked: <what it changes>". Their look
+   covered the commit they saw, not this one.
+3. **Before every push to an existing branch, check whether its PR merged**
    (`gh pr view --json state`). If it did, branch again from `origin/master`.
-3. **After a merge, confirm the work landed**:
+4. **After a merge, confirm the work landed**:
    `git merge-base --is-ancestor <sha> origin/master`. A merged PR is
    necessary, not sufficient.
 
@@ -177,10 +202,12 @@ the point: it shows the owner a gap, such as `master` with no required check.
 | | Pre-existing findings go to `TODO.md` or a ledger, not this PR | not evaluated |
 | | A bug-fix PR names its cause | not evaluated |
 | | The description carries `Tested:` and `Undo:` | not evaluated |
+| | `Risk:` tier set by this repo's path list (list them) | not evaluated |
 | | Sync note for claude.ai-synced files | not evaluated |
 | | CI green, and `master` requires the `test` check | not evaluated |
 | | No timed PR check-ins | not evaluated |
 | Merging | The owner merges | not evaluated |
+| | A push after the owner looked is announced on the PR | not evaluated |
 | | Pre-push hook enabled (`git config core.hooksPath .githooks`) | not evaluated |
 | | Work confirmed on `master` with `git merge-base` | not evaluated |
 | After the merge | Template changes pulled by `copier update` | not evaluated |
