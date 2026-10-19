@@ -74,11 +74,20 @@ own copy; `copier update` keeps that edit.
 1. **Branch fresh from `origin/master` for every PR.** The owner merges within
    minutes, and a branch whose PR merged is dead (`.githooks/pre-push` blocks
    pushing to it).
-2. **Open the description with a `Code review:` line** (*trial*, with 1.7): the level, the
-   finding count, and what happened to them ("medium, 4 findings: 2 fixed, 1
-   intended, 1 pre-existing → TODO M"), or "skipped (docs only)".
-   **A PR that fixes a bug names its cause in one line**, apart from the
-   symptom. Step 1.8 spots repeats by cause, not by symptom.
+2. **The description opens with these lines**, after the Sync note if 2.3
+   applies. They put what the session saw in front of the owner at merge
+   time, without the transcript.
+   - `Code review:` (*trial*, with 1.7) the level, the finding count, and
+     what happened to them ("medium, 4 findings: 2 fixed, 1 intended, 1
+     pre-existing → TODO M"), or "skipped (docs only)".
+   - `Tested:` what ran and what it returned (step 1.5), and old → new for
+     any published number that moved.
+   - `Undo:` "revert", or "revert, then …" when a revert alone leaves
+     something behind: served data to rebuild and redeploy, commits or a
+     deploy a workflow already made, a claude.ai Project to re-sync, files
+     built downstream in a changed shape.
+   - `Cause:` a bug fix only: the cause in one line, apart from the symptom.
+     Step 1.8 spots repeats by cause, not by symptom.
 3. **A PR that changes a claude.ai-synced file** (`docs/BRIEF.md`,
    `docs/SPEC_*.md`, `docs/ARCHITECTURE.md`, `data/DATA.md`) opens with
    "After merge: press Sync in the claude.ai Project." and the paths, one per
@@ -159,6 +168,7 @@ the point: it shows the owner a gap, such as `master` with no required check.
 | | `Code review:` line in the description (trial) | not evaluated |
 | | Pre-existing findings go to `TODO.md` or a ledger, not this PR | not evaluated |
 | | A bug-fix PR names its cause | not evaluated |
+| | The description carries `Tested:` and `Undo:` | not evaluated |
 | | Sync note for claude.ai-synced files | not evaluated |
 | | CI green, and `master` requires the `test` check | not evaluated |
 | | No timed PR check-ins | not evaluated |
