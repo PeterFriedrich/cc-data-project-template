@@ -73,6 +73,8 @@ template has no data to ship, so each project fills it in.
 | | Security review: `/security-review` on risky paths (workflows, deploy, secrets, data added to a public repo, outside data rendered as HTML) | `CHANGE_PIPELINE.md` step 1.7; each project lists its paths | Habit |
 | | A security finding blocks the merge in CI (the open-source security review Action) | — | Declined: it needs a separately billed API key, and the surface is small (one admin token, in `edmonton-tax-viz`'s `refresh.yml`) |
 | **Merging** | The owner merges on green CI. No person or bot reads the diff | — | As is; `/code-review` is the trial above |
+| | Review scaled by risk: a `Risk:` tier set by paths; high means the owner reads the diff; low may later merge on green | `CHANGE_PIPELINE.md` steps 2.2 and 3.1 | **Trial** from 2026-10-19: a label only; self-merge of low waits on TODO M. Two-person tiers: n/a, one owner |
+| | A push after the owner looked is announced on the PR | `CHANGE_PIPELINE.md` step 3.2 | Habit |
 | | No push to a branch whose PR already merged | `.githooks/pre-push`; `handoff_gap.py` says at session start when `core.hooksPath` isn't set | Enforced (fails open) |
 | | Checks rerun on the latest `master` before merge (merge queue) | — | **Missing**; branches needn't be up to date, so CI on the `master` push catches a bad combination after the fact |
 | | Work confirmed on `master` with `git merge-base --is-ancestor` | `CLAUDE.md` | Habit |
