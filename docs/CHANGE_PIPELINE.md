@@ -51,6 +51,13 @@ own copy; `copier update` keeps that edit.
      `docs/DATA_ISSUES.md` / `docs/ASSUMPTIONS.md` row if it is about data.
      Old silent errors surface here, and without a home they either swell
      the PR or get dropped.
+   - **Security review on risky paths** (*per project*: each repo lists its
+     own). Run `/security-review` too when the diff touches
+     `.github/workflows/`, a deploy script, or a secret or token; adds a data
+     file to a public repo; or renders outside data as HTML. Handle its
+     findings like the ones above, on the same `Code review:` line
+     ("security: 0 findings"). Other diffs skip it. This repo's list: the
+     template defaults above.
 8. **A kind of finding seen twice is fixed at the source**, not by hand a
    third time. When `/code-review` or an audit flags the same kind of problem
    on a second PR, fix it at the source in that PR, or tell the owner why not.
@@ -145,6 +152,7 @@ the point: it shows the owner a gap, such as `master` with no required check.
 | | A moved published number shown old → new, with why | not evaluated |
 | | Break each new or changed guard on purpose | not evaluated |
 | | Review the diff with `/code-review` (trial) | not evaluated |
+| | `/security-review` on this repo's risky paths (list them) | not evaluated |
 | | A kind of finding seen twice is fixed at the source | not evaluated |
 | | Commit each working unit | not evaluated |
 | The PR | A fresh branch from `origin/master` per PR | not evaluated |
