@@ -64,3 +64,8 @@ jobs:
       # VERIFIED row names a test that exists. Completeness is each project's own test.
       - name: Check assumptions index
         run: python scripts/check_assumptions.py
+
+      # A copier update returns the fit table as one conflict block; taking either
+      # side whole drops the project's answers or the template's new rows.
+      - name: Check change-pipeline fit table
+        run: python scripts/check_fit_table.py

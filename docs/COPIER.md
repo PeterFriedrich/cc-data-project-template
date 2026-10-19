@@ -104,6 +104,8 @@ evaluated, not applied blindly:**
    Start from the template's side, copy each earlier answer back by its Step
    name, then answer the rows still `not evaluated`. Check that no row from
    either side went missing, then remove the markers.
+   `scripts/check_fit_table.py` (in CI) fails on a leftover marker, a missing
+   or repeated step, or an empty answer.
 5. Run the tests, commit, open a PR listing what was taken, what declined,
    and the new fit answers.
 
