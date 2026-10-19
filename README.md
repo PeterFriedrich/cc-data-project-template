@@ -48,7 +48,8 @@ template has no data to ship, so each project fills it in.
 | | An unproven premise gets a row in `docs/ASSUMPTIONS.md` | `check_assumptions.py` | Format enforced; adding the row is habit; completeness is a per-project test |
 | | Tests and guards run locally, output shown | `pytest`, the `scripts/check_*.py` | Habit (CI catches it anyway) |
 | | A second agent reviews the diff: `/code-review` | — | **Trial** in `edmonton-tax-viz`; the gate is TODO J |
-| | Lint and type checks | — | **Missing** |
+| | Each new or changed guard is broken on purpose, and its test goes red | `CHANGE_PIPELINE.md` step 1.6 | Habit |
+| | Lint and type checks | — | Declined for now: no bug in this project or `edmonton-tax-viz` has been traced to the lack of one, and these projects fail by silent correctness, which a linter doesn't catch |
 | **On every PR** | CI: pytest plus four guards; `master` requires the `test` check | `tests.yml`, branch protection | Enforced |
 | | Every third-party import is pinned | `check_requirements.py` | Enforced |
 | | Doc citations resolve; no line numbers | `check_doc_citations.py` | Enforced |

@@ -26,7 +26,10 @@ own copy; `copier update` keeps that edit.
    `docs/ASSUMPTIONS.md`**, pointing at the evidence.
 5. **Verify, and show the output.** Run `python -m pytest tests -q` and every
    `scripts/check_*.py`. Say what ran and what it returned, not that it passed.
-6. **Review the diff** (*trial*: follow it where the owner has started the
+6. **Break each new or changed guard on purpose.** Revert the fix or mutate
+   the check, confirm its test goes red, then restore it. A test that passes
+   either way guards nothing; on template PR #37 this caught one.
+7. **Review the diff** (*trial*: follow it where the owner has started the
    trial; TODO J in the template decides whether it becomes the rule). Run
    `/code-review` on a diff that touches code, at the level below. Fix or resolve each finding with a reason. Docs-only diffs skip
    this step.
@@ -34,14 +37,14 @@ own copy; `copier update` keeps that edit.
    - `low`: tooling, guards, tests.
    - `ultra`: only when the owner starts it; it is billed.
    - One round per PR. Re-review only after a substantial fix.
-7. **Commit each working unit** with a descriptive message.
+8. **Commit each working unit** with a descriptive message.
 
 ## 2. The PR
 
 1. **Branch fresh from `origin/master` for every PR.** The owner merges within
    minutes, and a branch whose PR merged is dead (`.githooks/pre-push` blocks
    pushing to it).
-2. **Open the description with a `Code review:` line** (*trial*, with 1.6): the level, the
+2. **Open the description with a `Code review:` line** (*trial*, with 1.7): the level, the
    finding count, and what happened to them ("medium, 3 findings: 2 fixed, 1
    intended"), or "skipped (docs only)".
 3. **A PR that changes a claude.ai-synced file** (`docs/BRIEF.md`,
