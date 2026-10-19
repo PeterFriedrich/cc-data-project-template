@@ -55,7 +55,9 @@ template has no data to ship, so each project fills it in.
 | | A decision that protects a number gets a test, and its row cites it | `check_decisions_log.py` | Enforced (the test exists; not that it tests the decision) |
 | | An unproven premise gets a row in `docs/ASSUMPTIONS.md` | `check_assumptions.py` | Format enforced; adding the row is habit; completeness is a per-project test |
 | | Tests and guards run locally, output shown | `pytest`, the `scripts/check_*.py` | Habit (CI catches it anyway) |
+| | A change that moves a published number shows old → new and why | per project | Per project |
 | | A second agent reviews the diff: `/code-review` | — | **Trial** in `edmonton-tax-viz`; the gate is TODO J |
+| | A kind of finding seen twice is fixed at the source (a guard, `CLAUDE.md`, `REVIEW.md`) | `CHANGE_PIPELINE.md` step 1.8 | Habit |
 | | Each new or changed guard is broken on purpose, and its test goes red | `CHANGE_PIPELINE.md` step 1.6 | Habit |
 | | Lint and type checks | — | Declined for now: no bug in this project or `edmonton-tax-viz` has been traced to the lack of one, and these projects fail by silent correctness, which a linter doesn't catch |
 | **On every PR** | CI: pytest plus four guards; `master` requires the `test` check | `tests.yml`, branch protection | Enforced |

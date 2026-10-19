@@ -26,6 +26,10 @@ own copy; `copier update` keeps that edit.
    `docs/ASSUMPTIONS.md`**, pointing at the evidence.
 5. **Verify, and show the output.** Run `python -m pytest tests -q` and every
    `scripts/check_*.py`. Say what ran and what it returned, not that it passed.
+   Passing tests are not the result in a data project. **A change that moves a
+   published number shows the old and new value and why it moved** (*per
+   project*: which numbers count as published, and the command that prints
+   them).
 6. **Break each new or changed guard on purpose.** Revert the fix or mutate
    the check, confirm its test goes red, then restore it. A test that passes
    either way guards nothing; on template PR #37 this caught one.
@@ -37,7 +41,11 @@ own copy; `copier update` keeps that edit.
    - `low`: tooling, guards, tests.
    - `ultra`: only when the owner starts it; it is billed.
    - One round per PR. Re-review only after a substantial fix.
-8. **Commit each working unit** with a descriptive message.
+8. **A kind of finding seen twice is fixed at the source**, not by hand a
+   third time. When `/code-review` or an audit flags the same kind of problem
+   on a second PR, add a guard, a `CLAUDE.md` line or a `REVIEW.md` line in
+   that PR, or tell the owner why not.
+9. **Commit each working unit** with a descriptive message.
 
 ## 2. The PR
 
@@ -117,8 +125,10 @@ the point: it shows the owner a gap, such as `master` with no required check.
 | | A decision that protects a number is a test first | not evaluated |
 | | Unproven premises indexed in `docs/ASSUMPTIONS.md` | not evaluated |
 | | Verify, and show the output | not evaluated |
+| | A moved published number shown old → new, with why | not evaluated |
 | | Break each new or changed guard on purpose | not evaluated |
 | | Review the diff with `/code-review` (trial) | not evaluated |
+| | A kind of finding seen twice is fixed at the source | not evaluated |
 | | Commit each working unit | not evaluated |
 | The PR | A fresh branch from `origin/master` per PR | not evaluated |
 | | `Code review:` line in the description (trial) | not evaluated |
