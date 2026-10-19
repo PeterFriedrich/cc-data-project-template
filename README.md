@@ -76,7 +76,7 @@ template has no data to ship, so each project fills it in.
 | | Review scaled by risk: a `Risk:` tier set by paths; high means the owner reads the diff; low may later merge on green | `CHANGE_PIPELINE.md` steps 2.2 and 3.1 | **Trial** from 2026-10-19: a label only; self-merge of low waits on TODO M. Two-person tiers: n/a, one owner |
 | | A push after the owner looked is announced on the PR | `CHANGE_PIPELINE.md` step 3.2 | Habit |
 | | No push to a branch whose PR already merged | `.githooks/pre-push`; `handoff_gap.py` says at session start when `core.hooksPath` isn't set | Enforced (fails open) |
-| | Checks rerun on the latest `master` before merge (merge queue) | — | **Missing**; branches needn't be up to date, so CI on the `master` push catches a bad combination after the fact |
+| | Checks rerun on the latest `master` before merge (merge queue) | — | Declined: GitHub offers merge queues only on organization-owned repos, and these are personal. No need seen: `master` CI after each merge was red 0 times in 286 runs (tax-viz, civic-map, template, to 2026-10-19). That CI still catches a bad combination, after it lands |
 | | Work confirmed on `master` with `git merge-base --is-ancestor` | `CLAUDE.md` | Habit |
 | **After the merge** | Template changes reach projects by `copier update` | `copier.yml`, `template_drift.py` | Enforced notice; the update is run by hand |
 | | Publish, with a gate before it ships | per project | Per project (`edmonton-tax-viz`: weekly `refresh.yml`, gated by verified notebooks) |
