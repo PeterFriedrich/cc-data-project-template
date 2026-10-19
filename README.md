@@ -57,7 +57,7 @@ template has no data to ship, so each project fills it in.
 | | A PR touching a claude.ai-synced file says so first | `CLAUDE.md` | Habit |
 | | Security review: `/security-review` | — | **Missing**; matters most for deploy workflows and secrets |
 | **Merging** | The owner merges on green CI. No person or bot reads the diff | — | As is; `/code-review` is the trial above |
-| | No push to a branch whose PR already merged | `.githooks/pre-push` | Enforced (fails open) |
+| | No push to a branch whose PR already merged | `.githooks/pre-push`; `handoff_gap.py` says at session start when `core.hooksPath` isn't set | Enforced (fails open) |
 | | Checks rerun on the latest `master` before merge (merge queue) | — | **Missing**; branches needn't be up to date, so CI on the `master` push catches a bad combination after the fact |
 | | Work confirmed on `master` with `git merge-base --is-ancestor` | `CLAUDE.md` | Habit |
 | **After the merge** | Template changes reach projects by `copier update` | `copier.yml`, `template_drift.py` | Enforced notice; the update is run by hand |
