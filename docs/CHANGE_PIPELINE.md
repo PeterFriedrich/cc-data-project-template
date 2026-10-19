@@ -81,7 +81,11 @@ own copy; `copier update` keeps that edit.
    GitHub issues, a failing scheduled run) and how to undo it (`git revert`,
    then redeploy). Read open issues at session start: `gh issue list --state
    open`.
-5. **An upstream data defect found on the way** goes in `docs/DATA_ISSUES.md`,
+5. **Count fixes after a merge** (*per project*): how the project would notice
+   that a lighter step (a skipped review, a looser guard) is costing more
+   fixes later. A fix to a recently merged change, or a wrong published number
+   found after it shipped, is the cost that review time was meant to save.
+6. **An upstream data defect found on the way** goes in `docs/DATA_ISSUES.md`,
    with whether the publisher has been told.
 
 ## When to stop and ask
@@ -128,4 +132,5 @@ the point: it shows the owner a gap, such as `master` with no required check.
 | | Publish, with a gate before it ships | not evaluated |
 | | Seen before the public build | not evaluated |
 | | Watch and roll back | not evaluated |
+| | Fixes after a merge are counted (the guardrail) | not evaluated |
 | | Upstream data defects logged in `docs/DATA_ISSUES.md` | not evaluated |
