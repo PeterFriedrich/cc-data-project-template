@@ -66,14 +66,14 @@ template has no data to ship, so each project fills it in.
 | | Doc citations resolve; no line numbers | `check_doc_citations.py` | Enforced |
 | | The description opens with a `Code review:` line | — | Trial, with `/code-review` |
 | | A pre-existing finding goes to `TODO.md` or a ledger, not into the PR | `CHANGE_PIPELINE.md` step 1.7 | Habit |
-| | A bug-fix PR names its cause, apart from the symptom | `CHANGE_PIPELINE.md` step 2.2 | Habit |
+| | A bug-fix PR names its cause, apart from the symptom, and the step that missed it (or the audit that found it) | `CHANGE_PIPELINE.md` step 2.2 | Habit |
 | | The description says how it was tested and how to undo it (`Tested:`, `Undo:`); `gh pr create --body` ignores a GitHub PR template, so the rule lives in the doc | `CHANGE_PIPELINE.md` step 2.2 | Habit |
 | | AI review on every PR, server-side (Code Review for Claude Code) | — | Not available: Team and Enterprise plans only, and this owner is on Pro. The local `/code-review` trial stands in |
 | | A PR touching a claude.ai-synced file says so first | `CLAUDE.md` | Habit |
 | | Security review: `/security-review` on risky paths (workflows, deploy, secrets, data added to a public repo, outside data rendered as HTML) | `CHANGE_PIPELINE.md` step 1.7; each project lists its paths | Habit |
 | | A security finding blocks the merge in CI (the open-source security review Action) | — | Declined: it needs a separately billed API key, and the surface is small (one admin token, in `edmonton-tax-viz`'s `refresh.yml`) |
 | **Merging** | The owner merges on green CI. No person or bot reads the diff | — | As is; `/code-review` is the trial above |
-| | Review scaled by risk: a `Risk:` tier set by paths; high means the owner reads the diff; low may later merge on green | `CHANGE_PIPELINE.md` steps 2.2 and 3.1 | **Trial** from 2026-10-19: a label only; self-merge of low waits on TODO M. Two-person tiers: n/a, one owner |
+| | Review scaled by risk: a `Risk:` tier set by paths; high means the owner reads the diff; low may later merge on green | `CHANGE_PIPELINE.md` steps 2.2 and 3.1 | **Trial** from 2026-10-19: a label only; self-merge of low waits on TODO M, with a circuit breaker on fixes to self-merged PRs. Two-person tiers: n/a, one owner |
 | | A push after the owner looked is announced on the PR | `CHANGE_PIPELINE.md` step 3.2 | Habit |
 | | No push to a branch whose PR already merged | `.githooks/pre-push`; `handoff_gap.py` says at session start when `core.hooksPath` isn't set | Enforced (fails open) |
 | | Checks rerun on the latest `master` before merge (merge queue) | — | Declined: GitHub offers merge queues only on organization-owned repos, and these are personal. No need seen: `master` CI after each merge was red 0 times in 286 runs (tax-viz, civic-map, template, to 2026-10-19). That CI still catches a bad combination, after it lands |
@@ -81,7 +81,7 @@ template has no data to ship, so each project fills it in.
 | **After the merge** | Template changes reach projects by `copier update` | `copier.yml`, `template_drift.py` | Enforced notice; the update is run by hand |
 | | Publish, with a gate before it ships | per project | Per project (`edmonton-tax-viz`: weekly `refresh.yml`, gated by verified notebooks) |
 | | Seen before the public build | per project | Per project (`edmonton-tax-viz`: the full build vs the public map) |
-| | Watch and roll back | automated issues, `git revert` | Habit: issues are read only at session start; no on-call |
+| | Watch and roll back | automated issues, `git revert` | Habit: issues are read only at session start; no on-call. A warning that only reaches a log doesn't count (step 4.4). Feature flags: n/a, static builds roll back by revert and redeploy |
 | | Fixes after a merge are counted (the guardrail) | per project | Per project; no project measures it yet |
 | | A defect in someone else's data is logged with whether the publisher was told | `DATA_ISSUES.md` | Habit |
 
