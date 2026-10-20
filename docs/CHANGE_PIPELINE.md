@@ -103,7 +103,11 @@ own copy; `copier update` keeps that edit.
      what happened to them ("medium, 4 findings: 2 fixed, 1 intended, 1
      pre-existing, now a TODO item"), or "skipped (docs only)".
    - `Tested:` what ran and what it returned (step 1.5), and old → new for
-     any published number that moved.
+     any published number that moved. Then "not covered: …", naming what no
+     test or guard checked ("not covered: the served page; only the JSON was
+     checked"), or "not covered: nothing known". The owner can't read the
+     evidence without knowing what the checks would miss, and a published
+     number in the not-covered part is the cue to read the diff.
    - `Undo:` "revert", or "revert, then …" when a revert alone leaves
      something behind: served data to rebuild and redeploy, commits or a
      deploy a workflow already made, a claude.ai Project to re-sync, files

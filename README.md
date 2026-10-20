@@ -69,7 +69,7 @@ template has no data to ship, so each project fills it in.
 | | The description opens with a `Code review:` line | — | Trial, with `/code-review` |
 | | A pre-existing finding goes to `TODO.md` or a ledger, not into the PR | `CHANGE_PIPELINE.md` step 1.7 | Habit |
 | | A bug-fix PR names its cause, apart from the symptom, and the step that missed it (or the audit that found it) | `CHANGE_PIPELINE.md` step 2.2 | Habit |
-| | The description says how it was tested and how to undo it (`Tested:`, `Undo:`); `gh pr create --body` ignores a GitHub PR template, so the rule lives in the doc | `CHANGE_PIPELINE.md` step 2.2 | Habit |
+| | The description says how it was tested, what the checks don't cover, and how to undo it (`Tested:` with "not covered:", `Undo:`); `gh pr create --body` ignores a GitHub PR template, so the rule lives in the doc | `CHANGE_PIPELINE.md` step 2.2 | Habit |
 | | AI review on every PR, server-side (Code Review for Claude Code) | — | Not available: Team and Enterprise plans only, and this owner is on Pro. The local `/code-review` trial stands in |
 | | A PR touching a claude.ai-synced file says so first | `CLAUDE.md` | Habit |
 | | Security review: `/security-review` on risky paths (workflows, deploy, secrets, data added to a public repo, outside data rendered as HTML) | `CHANGE_PIPELINE.md` step 1.7; each project lists its paths | Habit |
