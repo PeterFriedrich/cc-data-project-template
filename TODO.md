@@ -31,6 +31,7 @@ symptom and re-measure the stated cause before acting on it.
     4. **Do the docs agree?** `CHANGE_PIPELINE.md` vs the README table vs the `CLAUDE.md` skeleton vs the skills, after 15 fast PRs: contradictions, duplicated rules, rules with no step. Size too (TODO G: `CLAUDE.md` 8.3 KB, pipeline 14.7 KB, README 12.4 KB).
     5. **Skills:** `handoff`, `steward`, `project-audit`. Is each followed, and does `project-audit`'s data-project checklist fit this tooling repo?
     6. **Backlog and ledgers:** stale open TODOs (A, E and F date from late September), superseded `DECISIONS.md` rows, `FINDINGS_harvest.md` still current.
+  - **Other repos: both.** Read their files, `git log` and `gh` data yourself first (`project-audit` grounding step 4). Ask a project's session only for what files can't show: why it forked or declined a template change, whether a habit is followed, what broke in practice. Targets 1, 2 and 5 need this. tax-viz's answers in this session changed three proposals (S09).
   - **Cost:** one or two targets per session, with `/code-review medium` on any fix PR to a guard. Done when every target has a ledger row and each finding is fixed, a TODO, or declined.
 
 ## Done
