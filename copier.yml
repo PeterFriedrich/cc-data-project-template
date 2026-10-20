@@ -23,9 +23,11 @@ _exclude:
   - .git
   - .DS_Store
   - .pytest_cache
-  # this repo's own state. TODO.md, docs/DECISIONS.md and docs/TODO_archive.md
-  # need no entry: copier skips a file whose `.jinja` sibling exists, and
-  # excluding them here would exclude the rendered skeleton too.
+  # this repo's own state. TODO.md, docs/DECISIONS.md, docs/TODO_archive.md and
+  # docs/AUDIT_LEDGER.md need no entry: copier skips a file whose `.jinja`
+  # sibling exists, and excluding them here would exclude the rendered skeleton
+  # too. docs/ASSUMPTIONS.md and docs/DATA_ISSUES.md have no skeleton because
+  # the template keeps no rows there; tests/test_copier.py fails if it starts.
   - /session-summary/*.md
   - /session-summary/archive/*.md
   - /docs/FINDINGS_*.md
