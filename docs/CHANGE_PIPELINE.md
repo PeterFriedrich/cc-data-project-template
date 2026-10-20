@@ -53,7 +53,12 @@ own copy; `copier update` keeps that edit.
    - `medium`: a change to a published number, a data contract or `src/`.
    - `low`: tooling, guards, tests.
    - `ultra`: only when the owner starts it; it is billed.
-   - One round per PR. Re-review only after a substantial fix.
+   - One round per PR. Re-review only after a substantial fix, and only on
+     the new diff.
+   - **Fix the class, not the line.** When you fix a finding, search for the
+     same pattern elsewhere (another hand-kept copy of a list, the same
+     unchecked call) and fix every instance, or say why one stays. Note it on
+     the `Code review:` line ("fixed, 2 more instances by grep").
    - **A real finding this diff didn't introduce is pre-existing.** Don't fix
      it in this PR (the smallest-change rule); open a `TODO.md` item, or a
      `docs/DATA_ISSUES.md` / `docs/ASSUMPTIONS.md` row if it is about data.
