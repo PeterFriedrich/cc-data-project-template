@@ -102,10 +102,11 @@ Fidelity:
   alberta's first update (bf5f568 → 9ded929) in a scratch clone, copier
   delivered `docs/SCOPE.md`, the `copier` pin in `requirements-ci.txt` and a
   `requirements.txt` conflict. Alberta's commit 06a32d6 took none of the
-  three. `SCOPE.md` arrived later by alberta's PR #1, and the pin never did:
-  per `alberta-regional-viz`, the file has had one commit, its initial one.
-  That particular drop was harmless (see F6), but nothing would notice a
-  harmful one. The drift notice compares `_commit`, not content.
+  three. Its message records declining both `copier` pins ("nothing in this
+  repo imports copier"), so those were a deliberate fork. `SCOPE.md` isn't
+  mentioned there; alberta's PR #1 added it later. One unrecorded omission,
+  later fixed, is all the evidence. Still, no check exists: the drift notice
+  compares `_commit`, not content, so a harmful drop would go unnoticed.
 - **alberta's synced-path fork: intended, and costly at each update.** Its
   `handoff/SKILL.md` sync-check command, `docs/CLAUDE_WEB.md` synced-file list and
   `CLAUDE.md` add `docs/SCOPE_candidates.md` to the claude.ai synced set. Per
@@ -142,7 +143,7 @@ Fidelity:
 | F1 | GitHub "Use this template" is live on a public repo and copies 14 own-state files | WARN | The owner turns off Settings → "Template repository" (`gh api -X PATCH repos/PeterFriedrich/cc-data-project-template -F is_template=false`). It's a repo setting, so it's the owner's call. |
 | F2 | permit-speed isn't connected; no blocker | CONDITIONAL | TODO E, done in the `copier update` round |
 | F3 | tax-viz gets template changes only when the template pushes them | CONDITIONAL | TODO O: per-file "ported from `<commit>`" markers, plus a notice that names only template commits touching those files, silent otherwise (per `edmonton-tax-viz`). It's a hook change: plan first, owner's call. |
-| F4 | `_commit` advances even when a hunk is dropped | WARN | TODO O: after each update, diff shipped files against the template at the new `_commit`; every difference is a slot or a recorded fork (the method below) |
+| F4 | `_commit` advances even when a hunk is dropped; no check compares content (one unrecorded omission found, later fixed) | WARN (minor) | TODO O: after each update, diff shipped files against the template at the new `_commit`; every difference is a slot or a recorded fork (the method below) |
 | F5 | No project-owned place for extra synced paths or CI steps; both conflict at each update | WARN | TODO O: an extension point for each, scoped with alberta and civic-map |
 | F6 | `requirements-ci.txt` ships `copier==9.18.2` to projects, but only the template's own `tests/test_copier.py` (not shipped) imports it | WARN (minor) | TODO O: split the template-only pin out |
 | F7 | `project-audit` tells the auditor to write `docs/AUDIT_<target>.md`, and in the template that file would ship to every project (the step-0 class again). This run put its method here instead. | WARN | TODO O: exclude template briefs without excluding `AUDIT_LEDGER.md`'s skeleton, or point the skill at `FINDINGS_*` for the template |
@@ -176,11 +177,12 @@ Run from the template root, with each project's `master` shallow-cloned to
   #42–#62, and the missing rules came from #44–#59. My grep searched for phrasings I'd guessed
   ("ported up to", "template commit") instead of reading the ported file's
   header. The session corrected it.
-- **Mis-framed a drop as a fork.** The fork scan reported alberta's
-  `requirements-ci.txt` as "drops the copier pin" (a local edit). In fact
-  the update delivered the pin and the session's commit never took it. A scan
-  against `_commit` can't tell a deletion apart from a hunk that was never
-  committed; only a replay can.
+- **Corrected a correct framing into a wrong one.** The fork scan reported
+  alberta's `requirements-ci.txt` as a fork, and that was right. I "corrected"
+  it to a silent drop after a replay showed that the update delivered the
+  pin, without reading the update commit's message, which records the
+  decline. `alberta-regional-viz` caught it. A replay shows what copier
+  offered; the commit message shows what the session decided.
 - **Stale refs.** My first pass at update history read local `origin/master`,
   which showed civic-map at `e79c7b1`; GitHub has `5b48600`. I re-read
   everything from GitHub.
