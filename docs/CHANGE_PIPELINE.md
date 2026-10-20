@@ -32,6 +32,12 @@ own copy; `copier update` keeps that edit.
      that this exists. Offer it; don't make it unasked.
 2. **Reproduce before you fix.** An open TODO item can be stale: re-measure
    its stated cause first.
+   - **Search `docs/DECISIONS.md` before changing a behaviour or a number**,
+     for the file, function or term you're about to change. Say what it found
+     in the plan or the description, or "no decision found". Checking "when
+     it feels settled" misses the case where it doesn't: `edmonton-tax-viz`
+     reverted a change whose own fix says "it was decided, and I had not read
+     the row".
 3. **A decision that protects a number is a test first.** Write the guard,
    then the `docs/DECISIONS.md` row that cites it.
 4. **A number that rests on something unproven gets a row in

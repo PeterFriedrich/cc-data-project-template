@@ -54,6 +54,7 @@ template has no data to ship, so each project fills it in.
 |---|---|---|---|
 | **Before the PR** | Plan first for a new module, a schema change or a CI change; a spec before any code | `CLAUDE.md`, `CONTRIBUTING.md` | Habit |
 | | An explainer (written, or a visual Artifact page) of an unfamiliar slice is offered at plan time and on high-risk PRs | `CHANGE_PIPELINE.md` steps 1.1 and 3.1 | Habit |
+| | `DECISIONS.md` searched for the file or term before changing a behaviour or a number | `CHANGE_PIPELINE.md` step 1.2 | Habit |
 | | A decision that protects a number gets a test, and its row cites it | `check_decisions_log.py` | Enforced (the test exists; not that it tests the decision) |
 | | An unproven premise gets a row in `docs/ASSUMPTIONS.md` | `check_assumptions.py` | Format enforced; adding the row is habit; completeness is a per-project test |
 | | Tests and guards run locally, output shown | `pytest`, the `scripts/check_*.py` | Habit (CI catches it anyway) |
