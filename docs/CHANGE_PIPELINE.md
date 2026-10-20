@@ -103,8 +103,12 @@ own copy; `copier update` keeps that edit.
      something behind: served data to rebuild and redeploy, commits or a
      deploy a workflow already made, a claude.ai Project to re-sync, files
      built downstream in a changed shape.
-   - `Cause:` a bug fix only: the cause in one line, apart from the symptom.
-     Step 1.8 spots repeats by cause, not by symptom.
+   - `Cause:` a bug fix only: the cause in one line, apart from the symptom,
+     then the step that should have caught it: "missed by: step 1.5", or
+     "missed by: none (found by <audit>)" when no step was meant to.
+     Step 1.8 spots repeats by cause and by the step that missed them, not by
+     symptom. Don't guess a step: in `edmonton-tax-viz`, 10 of 19 recent
+     fixes were found by an audit that no step stands in for.
 3. **A PR that changes a claude.ai-synced file** (`docs/BRIEF.md`,
    `docs/SPEC_*.md`, `docs/ARCHITECTURE.md`, `data/DATA.md`) opens with
    "After merge: press Sync in the claude.ai Project." and the paths, one per
@@ -130,7 +134,9 @@ own copy; `copier update` keeps that edit.
    *Trial from 2026-10-19:* the tier is a label only and the owner still
    merges every PR. If, after about two weeks, no low-tier PR needed anything
    after the owner looked, sessions may merge their own low-tier PRs on green
-   (template TODO M).
+   (template TODO M), with a circuit breaker: a fix to a self-merged PR's
+   tests or to a number it published stops self-merge until the owner turns
+   it back on.
 2. **A push after the owner has looked says so.** If you push to a PR the
    owner has already looked at or approved, comment on the PR before they
    merge: "new commit since you looked: <what it changes>". Their look
@@ -155,6 +161,10 @@ own copy; `copier update` keeps that edit.
    GitHub issues, a failing scheduled run) and how to undo it (`git revert`,
    then redeploy). Read open issues at session start: `gh issue list --state
    open`.
+   - **A warning that only reaches a log is not detection.** Make it fail, or
+     file an issue. In `edmonton-tax-viz`, failed runs and deploys were fixed
+     in 15 to 30 minutes, but a road class billed wrong for about 70 days
+     while its warning printed on every run to a log nobody read.
 5. **Count fixes after a merge** (*per project*): how the project would notice
    that a lighter step (a skipped review, a looser guard) is costing more
    fixes later. A fix to a recently merged change, or a wrong published number
