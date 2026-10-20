@@ -9,6 +9,7 @@ Excluded from renders (`copier.yml`), since it tests this repo's copier config.
 """
 import fnmatch
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -16,6 +17,9 @@ import pytest
 copier = pytest.importorskip("copier")
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "scripts"))
+
+import check_assumptions as ca  # noqa: E402 -- its table parser finds the ledger rows
 
 # This repo's own state: must never appear in a render.
 OWN_STATE = ["session-summary/*.md", "docs/FINDINGS_*.md", "docs/BRIEF.md"]
@@ -60,12 +64,24 @@ def test_render_carries_every_template_file_and_nothing_else(render):
 
 
 def test_ledgers_render_as_skeletons_not_this_repos_state(render):
-    for name in ("TODO.md", "docs/DECISIONS.md", "docs/TODO_archive.md"):
+    for name in ("TODO.md", "docs/DECISIONS.md", "docs/TODO_archive.md", "docs/AUDIT_LEDGER.md"):
         assert (render / name).read_text() == (REPO / f"{name}{SUFFIX}").read_text(), name
     assert "- [ ] <first item" in (render / "TODO.md").read_text()
-    rows = [ln for ln in (render / "docs/DECISIONS.md").read_text().splitlines()
-            if ln.startswith("| 20")]
-    assert rows == [], f"template's own decision rows leaked: {rows}"
+    for name in ("docs/DECISIONS.md", "docs/AUDIT_LEDGER.md"):
+        rows = [ln for ln in (render / name).read_text().splitlines() if ln.startswith("| 20")]
+        assert rows == [], f"template's own rows leaked from {name}: {rows}"
+
+
+@pytest.mark.parametrize("name", ["docs/ASSUMPTIONS.md", "docs/DATA_ISSUES.md"])
+def test_unskeletoned_ledgers_stay_empty_in_the_template(render, name):
+    """These two ship as the template's own file, with no `.jinja` skeleton,
+    because the template publishes no number and reads no outside data. A row
+    here would reach every new project (and, for DATA_ISSUES, every update)."""
+    ledgers = [t for t in ca.tables((render / name).read_text()) if ca.column(t[1], ca.STATUS) is not None]
+    assert ledgers, f"{name}: no table with a Status column; this test no longer finds the ledger"
+    rows = [f"line {n}" for _, _, body in ledgers for n, _ in body]
+    assert not rows, (f"{name} has rows ({', '.join(rows)}): give it a `{name}{SUFFIX}` skeleton "
+                      "first, as docs/DECISIONS.md has, so the rows stay the template's own")
 
 
 def test_render_records_where_it_came_from(render):

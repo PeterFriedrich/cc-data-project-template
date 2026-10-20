@@ -13,7 +13,7 @@ silent overwrite.
 
 What a project never receives (`copier.yml`): the template's own handoffs,
 findings docs and brief. Its ledgers (`TODO.md`, `docs/DECISIONS.md`,
-`docs/TODO_archive.md`) arrive as empty skeletons. `README.md`, `docs/SCOPE.md`
+`docs/TODO_archive.md`, `docs/AUDIT_LEDGER.md`) arrive as empty skeletons. `README.md`, `docs/SCOPE.md`
 and `data/DATA.md` are written once and never touched by an update.
 
 ## New project
