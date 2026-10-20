@@ -20,6 +20,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "scripts"))
 
 import check_assumptions as ca  # noqa: E402 -- its table parser finds the ledger rows
+import check_fit_table as cf  # noqa: E402
 
 # This repo's own state: must never appear in a render.
 OWN_STATE = ["session-summary/*.md", "docs/FINDINGS_*.md", "docs/BRIEF.md"]
@@ -113,3 +114,12 @@ def test_drift_notice_ignores_exactly_what_never_reaches_a_project(render):
         if drift.reaches_project(f) != reaches:
             wrong.append(f"{f}: script says {drift.reaches_project(f)}, copier says {reaches}")
     assert not wrong, "template_drift.IGNORED disagrees with copier.yml:\n" + "\n".join(wrong)
+
+
+def test_template_table_matches_fit_steps():
+    """The template ships every fit row `not evaluated` and none of its own
+    (README). A PR that adds, renames or drops a row must update FIT_STEPS too.
+    Here, not in test_check_fit_table.py: instances answer rows and add theirs."""
+    rows = cf.fit_rows((cf.ROOT / cf.PIPELINE).read_text())
+    assert [r[1] for _, r in rows] == cf.FIT_STEPS
+    assert cf.check(cf.ROOT) == ([], len(cf.FIT_STEPS))

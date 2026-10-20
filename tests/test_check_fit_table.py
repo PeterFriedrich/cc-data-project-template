@@ -27,15 +27,11 @@ def _all(answer: str = "adopted: habit") -> str:
     return "".join(_row(s, answer) for s in cf.FIT_STEPS)
 
 
-def test_template_table_matches_fit_steps():
-    """A PR that adds, renames or drops a fit row must update FIT_STEPS too."""
-    rows = cf.fit_rows((cf.ROOT / cf.PIPELINE).read_text())
-    assert [r[1] for _, r in rows] == cf.FIT_STEPS
-
-
 def test_this_repo_passes():
-    failures, unanswered = cf.check(cf.ROOT)
-    assert failures == [] and unanswered == len(cf.FIT_STEPS)
+    """Template-only checks (table == FIT_STEPS, every row unanswered) live in
+    tests/test_copier.py: an instance answers its rows and may add its own."""
+    failures, _ = cf.check(cf.ROOT)
+    assert failures == []
 
 
 def test_missing_doc_passes(tmp_path):
