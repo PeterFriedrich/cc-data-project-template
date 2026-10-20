@@ -26,6 +26,10 @@ own copy; `copier update` keeps that edit.
 1. **Plan first when the change is a new module, a data contract or output
    schema change, or a CI change** (`CLAUDE.md` §"Comments & Scope"). Send the
    plan to the owner and wait. Routine edits don't need one.
+   - **Offer an explainer in one line** when the plan touches a part of the
+     code the owner hasn't worked in: a written explainer of that slice, or a
+     page (an Artifact) that shows it visually. The owner asked to be reminded
+     that this exists. Offer it; don't make it unasked.
 2. **Reproduce before you fix.** An open TODO item can be stale: re-measure
    its stated cause first.
 3. **A decision that protects a number is a test first.** Write the guard,
@@ -139,6 +143,8 @@ own copy; `copier update` keeps that edit.
      has run, the description names the files or hunks to read, and the
      owner reads the diff before merging. There is one person, so no tier
      needs two; an agent's approval never stands in for the owner's.
+     Offer the same one-line explainer as step 1.1 for the slice the diff
+     changes.
 
    *Trial from 2026-10-19:* the tier is a label only and the owner still
    merges every PR. If, after about two weeks, no low-tier PR needed anything
