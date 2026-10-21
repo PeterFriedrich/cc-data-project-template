@@ -186,6 +186,21 @@ own copy; `copier update` keeps that edit.
      file an issue. In `edmonton-tax-viz`, failed runs and deploys were fixed
      in 15 to 30 minutes, but a road class billed wrong for about 70 days
      while its warning printed on every run to a log nobody read.
+   - **A scheduled job** (a refresh workflow, a cron harvest) fails quietly
+     unless it is built not to:
+     - an empty read is a failure, not a quiet week: a count check passes
+       0 == 0, so also fail below a floor (e.g. half the last run);
+     - read from where the last good run stopped, not a fixed window, and run
+       often enough that one missed run is caught up by the next;
+     - record a run as done (a bookmark, a ledger, a commit) only after its
+       output landed;
+     - something outside the job notices a job that never ran (on the
+       server: server-ops `monitor/stamp.sh`; GitHub disables a scheduled
+       Action after 60 days without repo activity);
+     - one token per repo, write access only where the job writes.
+
+     From Anthropic's "Building effective agent automations" (2026-10-08)
+     and the server's 2026-10-21 review of this box's cron jobs.
 5. **Count fixes after a merge** (*per project*): how the project would notice
    that a lighter step (a skipped review, a looser guard) is costing more
    fixes later. A fix to a recently merged change, or a wrong published number
