@@ -86,6 +86,8 @@ template has no data to ship, so each project fills it in.
 | | Publish, with a gate before it ships | per project | Per project (`edmonton-tax-viz`: weekly `refresh.yml`, gated by verified notebooks) |
 | | Seen before the public build | per project | Per project (`edmonton-tax-viz`: the full build vs the public map) |
 | | Watch and roll back | automated issues, `git revert` | Habit: issues are read only at session start; no on-call. A warning that only reaches a log doesn't count (step 4.4). Feature flags: n/a, static builds roll back by revert and redeploy |
+| | A scheduled job fails loudly: an empty read fails, a missed run is caught up, a job that never ran is noticed | `CHANGE_PIPELINE.md` step 4.4 | Habit; on this server, server-ops `monitor/stamp.sh` flags a cron job that never ran |
+| | Scheduled agents hosted by Anthropic (Claude Managed Agents) | — | Declined: an API product billed apart from the Pro plan, as the security review Action is. The jobs stay cron and GitHub Actions; the rules of Anthropic's "Building effective agent automations" (2026-10-08) are in step 4.4 |
 | | Fixes after a merge are counted (the guardrail) | per project | Per project; no project measures it yet |
 | | A defect in someone else's data is logged with whether the publisher was told | `DATA_ISSUES.md` | Habit |
 
