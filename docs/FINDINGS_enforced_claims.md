@@ -107,6 +107,12 @@ drive's `enforce_admins: true` stays. A check could make the row verifiable:
 a session-start notice when a public repo's `master` doesn't require `test`.
 It would need the network, and fail open like `template_drift.py`.
 
+**Outcome (2026-10-21/22).** Protection is on for alberta, open-data-landscape and
+civic-map, each checked against the recipe. drive keeps `enforce_admins: true`
+and its required PR (0 approvals): stricter than the recipe, no workflow there
+pushes to `master`, and the one cost is a settings toggle on a day CI breaks
+for an outside reason (owner, 2026-10-22).
+
 ## Audit: pre-push hook
 
 **Verdict:** WARN
