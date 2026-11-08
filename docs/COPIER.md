@@ -47,6 +47,9 @@ yet. Before turning protection on, have it push with a fine-grained token of an 
 `edmonton-tax-viz` does this with a `HEARTBEAT_TOKEN` secret (its `docs/RUNBOOK.md`).
 A token push, unlike `GITHUB_TOKEN`, does trigger workflows, so the commit must stage
 only data paths that the deploy workflow ignores, or each refresh redeploys itself.
+The other way out is to let that push be the deploy: `edmonton-civic-map` dropped the deploy
+step from `refresh.yml`, so its token push starts `pages.yml` once (refresh run 42525589251,
+2026-11-08, pushed 8476956 past the required `test` check; pages run 42526187824).
 
 Then answer `docs/CHANGE_PIPELINE.md` §"This project's fit" for the new project.
 
