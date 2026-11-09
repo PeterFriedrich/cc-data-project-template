@@ -52,11 +52,11 @@ symptom and re-measure the stated cause before acting on it.
   3. **`check_pins.py` (every `==`),** an optional guard for service requirements files. Wait until a second project needs it.
   - regenx's finding: listing `.githooks` in `SUBSTANTIVE` breaks `test_hooks_reminder_silent_when_hooks_path_set` (an uncommitted hook counts as work). Don't.
 - [ ] **U. The retrieval-log hook misses most reads.** (opened 2026-11-03, S13.) The template's PostToolUse hook matches `Read|Grep|Glob`, but Claude Code on Linux has no Grep or Glob tools: the shared `~/.claude/retrieval-log.jsonl` held 2,975 Bash, 822 Read and 0 Grep/Glob entries (2026-09-16 to 2026-11-02). So in a project on the template's hook, `tools/retrieval_report.py` sees about a fifth of retrieval. Port tax-viz's second hook, which pulls file paths out of Bash commands (widened there 2026-09-21), and update the report's docstring. It still can't see a search that missed: a directory-wide `grep -rn` names no file.
-- [ ] **V. Watch tax-viz's corrected-citation check.** (opened 2026-11-03, owner.) tax-viz is planning an extension of `check_doc_citations.py`: fail when a live surface (a DECISIONS row, a REPORT_CLAIMS proof pointer, a string in `web/index.html`) cites a doc section that was corrected after the citation was written. It needs dated corrections, e.g. a `corrected:` list at the top of each FINDINGS doc. Not the report's "sources changed in git" check, which would fire weekly on every doc. If it works there, upstream it together with P1, which edits the same guard.
-
 ## Done
 
 Closed items moved out of `## Open work` live in **`docs/TODO_archive.md`** — one line each below, reasoning there.
+
+- [x] **V. Watch tax-viz's corrected-citation check.** — CLOSED 2026-11-09 · `docs/TODO_archive.md`
 
 - [x] **M. Risk tiers: decide on self-merge of low-tier PRs.** — CLOSED 2026-11-04 · `docs/TODO_archive.md`
 
