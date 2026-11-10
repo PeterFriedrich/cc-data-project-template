@@ -21,6 +21,13 @@ top-down, fundamental decisions first.
 
 ## Queued — briefed, not yet run
 
+Briefs live out of repo, in `/home/opc/research/cc-data-project-template/audits/` (a `docs/AUDIT_*.md` here would ship to every project through copier). Each runs in its own fresh session (Fable 5.1, own worktree), queued 2026-11-10 (S13).
+
+- **Session safety net** (`handoff_gap.py`, `.githooks/pre-push`): `AUDIT_session_safety_net.md`. Covers N target 3's "then `handoff_gap.py`".
+- **Merge-gate guards** (`check_decisions_log.py`, `check_doc_citations.py`): `AUDIT_merge_gate_guards.md`. N target 3.
+- **The planned user-level rules home** (plan, not built): `AUDIT_user_rules_home.md`.
+- **The planned PR-tier check** (TODO J, on hold): `AUDIT_pr_tier_check.md`.
+
 ## Never audited (candidates, roughly ranked)
 
 Template targets, from TODO N (targets 1–2 done 2026-10-20):
