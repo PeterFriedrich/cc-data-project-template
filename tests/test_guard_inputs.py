@@ -12,6 +12,7 @@ asks for.
 """
 
 import sys
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -22,12 +23,18 @@ import check_decisions_log as dl  # noqa: E402
 import check_doc_citations as dc  # noqa: E402
 
 # raises= keeps a broken fixture from passing as a gap.
+# Dates relative to CUTOFF, so a project that moves it keeps these meaningful.
+NEW_D = (dl.CUTOFF + timedelta(days=55)).isoformat()   # the audit's 2026-11-11
+PREV_D = (dl.CUTOFF + timedelta(days=54)).isoformat()  # 2026-11-10
+OLD_D = (dl.CUTOFF + timedelta(days=14)).isoformat()   # 2026-10-01
+YM = NEW_D[:7]
+PRE_D = (dl.CUTOFF - timedelta(days=1)).isoformat()  # D2: a year typo lands before CUTOFF
 GAP = pytest.mark.xfail(strict=True, raises=AssertionError, reason="audit 2026-11-11 gap; TODO W")
 
 # --- decisions log ------------------------------------------------------------
 
 HEADER = "# Decisions\n\n| When | Decision | Full reasoning |\n|---|---|---|\n"
-OLD = "| 2026-10-01 | **Old rule.** [unverifiable] | p |"
+OLD = f"| {OLD_D} | **Old rule.** [unverifiable] | p |"
 TESTS = (
     "import pytest\n\n"
     "def test_real():\n    pass\n\n"
@@ -55,78 +62,78 @@ def _fails(root: Path) -> bool:
 NEW = "**New, no test, no tag.**"
 
 D_RIGHT = {  # id: (body, should_fail)
-    "D0a": ("| 2026-11-11 | **New.** | p |", True),
-    "D0b": ("| 2026-11-11 | **New.** `test_real` | p |", False),
-    "D0c": ("| 2026-11-11 | **New.** `test_gone` | p |", True),
-    "D0d": ("| 2026-11-11 | **New.** [unverifiable] | p |", False),
-    "D0e": (OLD + "\n| 2026-11-11 | Supersedes the 2026-10-01 row. [unverifiable] | p |", True),
-    "D0f": (OLD.replace("**Old rule.**", "**Old rule.** SUPERSEDED 2026-11-11")
-            + "\n| 2026-11-11 | Supersedes the 2026-10-01 row. [unverifiable] | p |", False),
-    "D1.7": (f"| 2026-11-11 (S14) | {NEW} | p |", True),
-    "D1.8": (f"|  2026-11-11 | {NEW} | p |", True),
+    "D0a": (f"| {NEW_D} | **New.** | p |", True),
+    "D0b": (f"| {NEW_D} | **New.** `test_real` | p |", False),
+    "D0c": (f"| {NEW_D} | **New.** `test_gone` | p |", True),
+    "D0d": (f"| {NEW_D} | **New.** [unverifiable] | p |", False),
+    "D0e": (OLD + f"\n| {NEW_D} | Supersedes the {OLD_D} row. [unverifiable] | p |", True),
+    "D0f": (OLD.replace("**Old rule.**", f"**Old rule.** SUPERSEDED {NEW_D}")
+            + f"\n| {NEW_D} | Supersedes the {OLD_D} row. [unverifiable] | p |", False),
+    "D1.7": (f"| {NEW_D} (S14) | {NEW} | p |", True),
+    "D1.8": (f"|  {NEW_D} | {NEW} | p |", True),
 }
 
 _SUPERSEDE = {
-    "D8.0": "Replaces the 2026-10-01 row.",
-    "D8.1": "Overrides the 2026-10-01 row.",
-    "D8.2": "Overturns the 2026-10-01 row.",
-    "D8.3": "Withdraws the 2026-10-01 row.",
-    "D8.4": "Revokes the 2026-10-01 row.",
-    "D8.5": "Undoes the 2026-10-01 row.",
-    "D8.6": "Corrects the 2026-10-01 row.",
-    "D8.7": "Updates the 2026-10-01 row.",
-    "D8.8": "The 2026-10-01 row is superseded.",
-    "D8.9": "The 2026-10-01 row is retracted.",
-    "D8.10": "The 2026-10-01 row no longer holds.",
-    "D8.11": "This will supersede the 2026-10-01 row.",
-    "D8.12": "Reversing the 2026-10-01 row.",
-    "D8.13": "Retracting the 2026-10-01 row.",
-    "D8.14": "A reversal of the 2026-10-01 row.",
-    "D8.15": "An amendment to the 2026-10-01 row.",
+    "D8.0": f"Replaces the {OLD_D} row.",
+    "D8.1": f"Overrides the {OLD_D} row.",
+    "D8.2": f"Overturns the {OLD_D} row.",
+    "D8.3": f"Withdraws the {OLD_D} row.",
+    "D8.4": f"Revokes the {OLD_D} row.",
+    "D8.5": f"Undoes the {OLD_D} row.",
+    "D8.6": f"Corrects the {OLD_D} row.",
+    "D8.7": f"Updates the {OLD_D} row.",
+    "D8.8": f"The {OLD_D} row is superseded.",
+    "D8.9": f"The {OLD_D} row is retracted.",
+    "D8.10": f"The {OLD_D} row no longer holds.",
+    "D8.11": f"This will supersede the {OLD_D} row.",
+    "D8.12": f"Reversing the {OLD_D} row.",
+    "D8.13": f"Retracting the {OLD_D} row.",
+    "D8.14": f"A reversal of the {OLD_D} row.",
+    "D8.15": f"An amendment to the {OLD_D} row.",
     "D8.16": "Supersedes the old-rule row.",
     "D8.17": "Supersedes the previous row.",
     "D8.18": "Supersedes the earlier decision.",
-    "D8.19": "Supersedes, after the owner asked alberta and tax-viz and permit-speed once more, the 2026-10-01 row.",
+    "D8.19": f"Supersedes, after the owner asked alberta and tax-viz and permit-speed once more, the {OLD_D} row.",
     "D8.20": "Supersedes the 1 October row.",
 }
 
 D_PASSES_WRONGLY = {  # should fail, exits 0
     "D1.0": f"| Nov 11, 2026 | {NEW} | p |",
-    "D1.1": f"| **2026-11-11** | {NEW} | p |",
-    "D1.2": f"| 2026-11 | {NEW} | p |",
+    "D1.1": f"| **{NEW_D}** | {NEW} | p |",
+    "D1.2": f"| {YM} | {NEW} | p |",
     "D1.3": f"|  | {NEW} | p |",
     "D1.4": f"| 11/11/2026 | {NEW} | p |",
     "D1.5": f"| S14 | {NEW} | p |",
-    "D1.6": f"| ~~2026-11-11~~ | {NEW} | p |",
-    "D1.9": "| **New, no test.** | 2026-11-11 | p |",
-    "D2": "| 2026-11-10 | ok [unverifiable] | p |\n| 2025-11-11 | **New, year typo, no test.** | p |",
-    "D3": OLD + "\n| 2026-11-11 | `test_real` holds; matcher `Read|Grep` now supersedes the 2026-10-01 row; see `test_gone` | p |",
-    "D6": "| 2026-10-01 | **Old rule.** ~~one clause~~ [unverifiable] | p |\n"
-          "| 2026-11-11 | Supersedes the 2026-10-01 row. [unverifiable] | p |",
-    "D7": "| 2026-10-01 | **A.** SUPERSEDED 2026-11-11 [unverifiable] | p |\n"
-          "| 2026-10-01 | **B.** [unverifiable] | p |\n"
-          "| 2026-11-11 | Supersedes the 2026-10-01 A row. [unverifiable] | p |\n"
-          "| 2026-11-11 | Supersedes the 2026-10-01 B row. [unverifiable] | p |",
-    "D8.x": OLD + "\n| 2026-11-11 | **New.** [unverifiable] | Supersedes the 2026-10-01 row; p |",
-    "D9": "| 2026-11-11 | **New.** [unverifiable] |  |",
-    "D10a": "- 2026-11-11: **New, no test.**",
-    "D10b": f"  | 2026-11-11 | {NEW} | p |",
-    "D14": "| 2026-11-11 | **New.** Enforced by `check_decisions_log.py`. | p |",
-    **{k: OLD + f"\n| 2026-11-11 | {v} [unverifiable] | p |" for k, v in _SUPERSEDE.items()},
+    "D1.6": f"| ~~{NEW_D}~~ | {NEW} | p |",
+    "D1.9": f"| **New, no test.** | {NEW_D} | p |",
+    "D2": f"| {PREV_D} | ok [unverifiable] | p |\n| {PRE_D} | **New, year typo, no test.** | p |",
+    "D3": OLD + f"\n| {NEW_D} | `test_real` holds; matcher `Read|Grep` now supersedes the {OLD_D} row; see `test_gone` | p |",
+    "D6": f"| {OLD_D} | **Old rule.** ~~one clause~~ [unverifiable] | p |\n"
+          f"| {NEW_D} | Supersedes the {OLD_D} row. [unverifiable] | p |",
+    "D7": f"| {OLD_D} | **A.** SUPERSEDED {NEW_D} [unverifiable] | p |\n"
+          f"| {OLD_D} | **B.** [unverifiable] | p |\n"
+          f"| {NEW_D} | Supersedes the {OLD_D} A row. [unverifiable] | p |\n"
+          f"| {NEW_D} | Supersedes the {OLD_D} B row. [unverifiable] | p |",
+    "D8.x": OLD + f"\n| {NEW_D} | **New.** [unverifiable] | Supersedes the {OLD_D} row; p |",
+    "D9": f"| {NEW_D} | **New.** [unverifiable] |  |",
+    "D10a": f"- {NEW_D}: **New, no test.**",
+    "D10b": f"  | {NEW_D} | {NEW} | p |",
+    "D14": f"| {NEW_D} | **New.** Enforced by `check_decisions_log.py`. | p |",
+    **{k: OLD + f"\n| {NEW_D} | {v} [unverifiable] | p |" for k, v in _SUPERSEDE.items()},
 }
 
 D_FAILS_WRONGLY = {  # should pass, fails
-    "E1": "| 2026-11-11 | **Hold out 20%: `test_size=0.2`.** [unverifiable] | p |",
-    "E2": "| 2026-11-11 | **Links.** `tools/check_links.py` | p |",
-    "E3": "| 2026-11-11 | **CRS.** `test_area_uses_EPSG3776` | p |",
-    "E4": "| 2026-11-11 | **Fetch.** `test_fetch` | p |",
-    "E5": "| 2026-10-01 | ~~**Old rule.** `test_old_rule`~~ SUPERSEDED 2026-11-11 | p |\n"
-          "| 2026-11-11 | **New.** Supersedes the 2026-10-01 row. [unverifiable] | p |",
-    "E6a": "| 2026-11-10 | **Innocent.** [unverifiable] | p |\n"
-           "| 2026-11-11 | **New.** tax-viz retracted its report 2026-11-10. [unverifiable] | p |",
-    "E6b": "| 2026-11-11 | **New.** The owner reversed the plan 2026-11-11. [unverifiable] | p |",
-    "E7": "| 2026-11-11 | **New.** | [unverifiable] p |",
-    "E8": "| 2026-11-11 | **Hook matcher stays `Read|Grep|Glob`.** [unverifiable] | p |",
+    "E1": f"| {NEW_D} | **Hold out 20%: `test_size=0.2`.** [unverifiable] | p |",
+    "E2": f"| {NEW_D} | **Links.** `tools/check_links.py` | p |",
+    "E3": f"| {NEW_D} | **CRS.** `test_area_uses_EPSG3776` | p |",
+    "E4": f"| {NEW_D} | **Fetch.** `test_fetch` | p |",
+    "E5": f"| {OLD_D} | ~~**Old rule.** `test_old_rule`~~ SUPERSEDED {NEW_D} | p |\n"
+          f"| {NEW_D} | **New.** Supersedes the {OLD_D} row. [unverifiable] | p |",
+    "E6a": f"| {PREV_D} | **Innocent.** [unverifiable] | p |\n"
+           f"| {NEW_D} | **New.** tax-viz retracted its report {PREV_D}. [unverifiable] | p |",
+    "E6b": f"| {NEW_D} | **New.** The owner reversed the plan {NEW_D}. [unverifiable] | p |",
+    "E7": f"| {NEW_D} | **New.** | [unverifiable] p |",
+    "E8": f"| {NEW_D} | **Hook matcher stays `Read|Grep|Glob`.** [unverifiable] | p |",
 }
 
 
@@ -144,14 +151,14 @@ def test_decisions_input_should_fail(tmp_path, case):
 
 @GAP
 def test_decisions_input_should_fail_D5(tmp_path):
-    root = _log(tmp_path, "| 2026-11-11 | **New.** `test_ghost` | p |")
+    root = _log(tmp_path, f"| {NEW_D} | **New.** `test_ghost` | p |")
     (root / "tests" / "test_a.py").write_text('FIXTURE = """\ndef test_ghost():\n    pass\n"""\n')
     assert _fails(root)
 
 
 @GAP
 def test_decisions_input_should_fail_D11(tmp_path):
-    assert _fails(_log(tmp_path, f"| 2026-11-11 | {NEW} | p |", encoding="utf-16"))
+    assert _fails(_log(tmp_path, f"| {NEW_D} | {NEW} | p |", encoding="utf-16"))
 
 
 @GAP

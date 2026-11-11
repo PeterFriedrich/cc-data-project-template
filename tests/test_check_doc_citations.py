@@ -108,15 +108,12 @@ def test_accepts_a_subsection_of_a_real_section(tmp_path):
     assert failures == []
 
 
-def test_doc_sections_parses_the_projects_heading_forms():
-    tmp = Path(__file__).parent / "_sections_probe.md"
+def test_doc_sections_parses_the_projects_heading_forms(tmp_path):
+    tmp = tmp_path / "_sections_probe.md"
     tmp.write_text(
         "## 5. Zoning\n### 0.1 The defect map\n## 6b. Round 2\n## Name Matching\n"
     )
-    try:
-        assert doc_sections(tmp) == {"5", "0.1", "6b"}
-    finally:
-        tmp.unlink()
+    assert doc_sections(tmp) == {"5", "0.1", "6b"}
 
 
 # --- the false positives that shaped the parser -------------------------------

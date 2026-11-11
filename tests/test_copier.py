@@ -25,7 +25,7 @@ import check_fit_table as cf  # noqa: E402
 # This repo's own state: must never appear in a render.
 OWN_STATE = ["session-summary/*.md", "docs/FINDINGS_*.md", "docs/BRIEF.md"]
 # Template-only machinery: also absent from a render.
-TEMPLATE_ONLY = ["copier.yml", "tests/test_copier.py"]
+TEMPLATE_ONLY = ["copier.yml", "tests/test_copier.py", "tests/test_guard_inputs.py"]
 SUFFIX = ".jinja"
 
 
