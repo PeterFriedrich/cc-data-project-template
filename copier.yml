@@ -34,6 +34,8 @@ _exclude:
   - /docs/BRIEF.md
   # tests this repo's copier config; meaningless in an instance
   - /tests/test_copier.py
+  # pins the template's own audit gaps (TODO W); its reasons point at files an instance lacks
+  - /tests/test_guard_inputs.py
 
 # Written once at creation, then the instance's alone: never touched by update.
 _skip_if_exists:
