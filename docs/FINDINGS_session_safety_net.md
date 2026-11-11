@@ -12,7 +12,10 @@ Method: each behaviour broken on purpose in scratch clones, never the working
 tree. 51 runs of `handoff_gap.py`, 18 pushes through the real hook against a
 bare scratch origin with a stand-in `gh`, and 10 mutations run against the test
 suite. The appendix lists every run. Other repos were read only: 17 carry a
-copy of `handoff_gap.py` and 15 a copy of the hook. The hooks reference was
+copy of `handoff_gap.py` and 15 a copy of the hook. Each was read at its local
+`origin` trunk ref, without a fetch; three of those refs were two commits
+behind the remote, corrected below (see "What this run got wrong"). The hooks
+reference was
 fetched from `code.claude.com/docs/en/hooks` the same day; Claude Code here is
 2.1.322, `gh` 2.103.2.
 
@@ -42,12 +45,12 @@ bound on missed work: it includes README and `CLAUDE.md` edits and bot commits.
 |---|---|---|---|---|---|
 | template | 95 | 16 | 51 | 28 | `README.md` 19, `.claude/` 6, `CLAUDE.md` 6, `bootstrap.sh` 2, `copier.yml` 1 |
 | edmonton-tax-viz (hand-port) | 486 | 187 | 253 | 46 | `notebooks/` 13, `CLAUDE.md` 10, `data/` 8, `.claude/` 7 |
-| alberta-regional-viz (copier) | 91 | 34 | 32 | 25 | `data/` 15 (`.md` files), `CLAUDE.md` 8, `notebooks/` 3 |
+| alberta-regional-viz (copier) | 92 | 34 | 33 | 25 | `data/` 15 (`.md` files), `CLAUDE.md` 8, `notebooks/` 3 |
 | edmonton-civic-map (copier) | 89 | 25 | 31 | 33 | `data/` 16, `prototype/` 10, `site/` 9 (2 by the refresh bot) |
-| drive-landscape (copier) | 61 | 31 | 23 | 7 | `CLAUDE.md` 5, `data/` 2 |
+| drive-landscape (copier) | 62 | 31 | 24 | 7 | `CLAUDE.md` 5, `data/` 2 |
 | edmonton-open-data-landscape (copier) | 53 | 14 | 29 | 10 | `data/` 7 (5 are weekly snapshots) |
 | edmonton-permit-speed (copier) | 16 | 5 | 4 | 7 | `data/` 5, `CLAUDE.md` 4 |
-| data-science-study (copier) | 5 | 0 | 1 | 4 | `studies/` 3 |
+| data-science-study (copier) | 6 | 0 | 2 | 4 | `studies/` 3 |
 | chemistry_sim, physics_sim, math-stats, transition-sim (hand-ports, own list) | 119 | 79 | 36 | 4 | `README.md`, `CLAUDE.md` |
 | PeterFriedrich.github.io (hand-port, own list) | 6 | 1 | 4 | 1 | `README.md` |
 | landing_page (hand-port, own list) | 2 | 0 | 0 | 2 | `wp-content/` 1, `CLAUDE.md` 1 |
@@ -111,8 +114,7 @@ copier project ships `session-summary/` with a `.gitkeep`. With no `.md` there
 `gap()` returns before looking at anything: two commits and a dirty file in
 `src/` produce nothing (A1, A2). Live: edmonton-nonprofit-map and
 recommendation-algorithms-explained have no handoff (one commit each, so
-nothing is owed yet), and data-science-study's only handoff sits on an unmerged
-branch.
+nothing is owed yet).
 
 **F2. An uncommitted `.md` in `session-summary/` turns the whole check off.**
 The script takes the last file by name, asks git when it was last committed,
@@ -173,7 +175,8 @@ of these is silent (B4): `notebooks/`, `data/`, `site/`, `app/`, `.claude/`,
   `notebooks/` is the gap (tax-viz 13, three of them to verified notebooks,
   which gate its weekly publish); TODO F already names it.
 - **A project with no code.** data-science-study's product is `studies/`: 0 of
-  5 commits can fire.
+  6 commits can fire. It has a handoff on `master`; the check is silent there
+  only because `studies/` is not in the list.
 - **The template itself.** Its product is `docs/`, `.claude/`, `CLAUDE.md` and
   `copier.yml`. Since the newest handoff (2026-10-30) 12 commits landed over 12
   days, two audits among them, and the hook has said nothing.
@@ -188,6 +191,17 @@ prevent. server-ops's copy inverts it (everything except `docs/`, `TODO.md`
 and handoffs), which fails loud. What would change the verdict: evidence that
 the docs-heavy projects would then be nagged after every commit, which is the
 reason `docs/` was left out (tax-viz DECISIONS, 2026-09-16).
+
+Since the run (same day): civic-map and data-science-study each opened a PR
+that sets its own list (their PRs 82 and 6, both open). civic-map's adds a
+case an exclude-list must handle: a path a bot writes. Its weekly refresh
+commits to `site/public/data`, and counted as work that would report a handoff
+owed after every Monday run. It drops the path with the pathspec
+`:(exclude)site/public/data`. Skipping by author would not cover every
+project: three of civic-map's four refresh commits are authored
+`github-actions[bot]` (the two made after its move to `HEARTBEAT_TOKEN` among
+them) and one carries the owner's name, as do all five of
+open-data-landscape's weekly snapshot commits.
 
 ## L2. What fail-open lets through
 
@@ -344,6 +358,19 @@ keeps `docs/ASSUMPTIONS.md` row-free by test, so no row there.
   uses those. The measuring script also could not parse server-ops's list.
 - **The filename check compares neighbours only**, so three inversions in
   tax-viz is a floor.
+- **I read three stale trunk refs and reported one false state from them**
+  (caught by `template`). The first version of this doc said
+  data-science-study's only handoff sat on an unmerged branch, so `master` had
+  no baseline. It merged as that repo's PR 5 on 2026-10-30; the handoff is on
+  `master`, and the check is silent there only because `studies/` is not
+  listed. Cause: I may not fetch in another repo, so I read each local
+  `origin` trunk ref, and that one was last updated three minutes before the
+  merge. I did not compare the refs with the remote, which `git ls-remote`
+  does without writing. Done afterwards for all 17: alberta and drive-landscape
+  were stale the same way, each missing one handoff commit and its merge from
+  the same morning. Their rows and data-science-study's are corrected (one
+  more docs-only commit each); no verdict moves. A local ref is a reading as
+  of its last fetch, which is the "guards measure data, not metadata" class.
 - **F6 rests on a negative.** "No transcript records a SessionEnd result" is
   the highest-risk claim shape, and I could not find the reader or prove there
   is none. It is marked unverified for that reason.
