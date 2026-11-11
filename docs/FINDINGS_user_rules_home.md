@@ -19,7 +19,7 @@ file is named beside them.
 |---|---|---|
 | L0 | Should cross-project rules be centralised at all? | **CONDITIONAL**: sound for reach, not for drift; holds only if L3 is fixed or knowingly accepted, and new corrections get a path into the home |
 | L1 | Is the core / skills split right? | **CONDITIONAL**: the core's own test is applied unevenly, 12 memories lose their always-loaded line, and no skill trigger has been tested |
-| L2 | Is the draft faithful to the sources? | **CONDITIONAL**: the four merges are faithful; moving project-scoped text to every project changes what five memories mean |
+| L2 | Is the draft faithful to the sources? | **CONDITIONAL**: the four merges are faithful; moving project-scoped text to every project changes what four memories mean |
 | L3 | Safety and switchover | **UNSOUND as written**: neither control the plan names exists |
 
 L3 is the lowest level, so nothing beneath it is mooted. It does decide the
@@ -173,12 +173,16 @@ whose origin belongs to another organisation and server-ops, where a push to
 `main` is a deploy. That may be what the owner wants. It is a new decision, and
 the draft presents it as a restatement.
 
-**F10. The reached-the-trunk line is wrong under a squash merge.** The core
-line gives the ancestor test without the caveat that
-`pr-merge-method-merge-commit` and `verify-commits-reached-master` both carry
-(under squash the original commit never lands). The owner's merges do come out
-as squash (this repo's `docs/DECISIONS.md`, 2026-10-19 and TODO H). As written
-the line reports stranded work that is not stranded.
+**F10. The reached-the-trunk line omits the squash caveat its sources carry.**
+`pr-merge-method-merge-commit` and `verify-commits-reached-master` both say what
+to do when a PR lands as a squash (the original commit never reaches the trunk,
+so the ancestor test on it reads as stranded). The core line gives the ancestor
+test alone. Squash is allowed on these repos and this repo records that the
+owner sometimes uses it (`docs/DECISIONS.md` 2026-10-19, hooks-reminder row;
+`TODO.md` H), but it is close to unused: of the last 100 merged PRs sampled
+(30 each here, in tax-viz and in alberta, 10 in permit-speed), 99 are merge
+commits and one is a squash (alberta #16, 2026-10-02). The caveat is cheap
+insurance, not a live defect.
 
 **F11. Verbatim text carries one project's permissions to every project.**
 The `git-pr` bodies include a tax-viz allowance to put docs commits straight on
@@ -215,7 +219,7 @@ covered, subject to F9.
 
 **Sharpest argument against L2.** The draft checks that no words were lost and
 not that the words still mean the same thing in a project they were not written
-in. **Would change the verdict:** F9 to F12 answered in the draft.
+in. **Would change the verdict:** F9, F11 and F12 answered in the draft.
 
 ## L3. Safety and switchover. UNSOUND as written
 
@@ -335,5 +339,12 @@ installed, and a check lists stale copies after the switchover.
 - **I counted `Skill` calls "the user named" with a crude text match** and
   dropped that split from F5 because I could not stand behind it. F5 uses only
   which skills were called.
+- **F10 first said the owner's merges come out as squash and called the core
+  line wrong.** I took "sometimes squash-merges" from two rows in this repo and
+  never looked at the merge history. `template` did: 99 of the last 100 sampled
+  merges are merge commits. This is the brief's own L2 failure (a source read
+  for its words, not checked against what happens), and it was caught by the
+  other session, not by me. F10 is restated; it had been counted among the
+  findings that "change what a memory means", and it does not.
 - **F2's "five of 11" is my reading of which lines restate the skeleton.** The
   proposed-edits file lists the pairs so the owner can disagree line by line.
