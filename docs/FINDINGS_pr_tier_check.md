@@ -17,7 +17,7 @@ read by hand: 83 PRs, in the appendix. Two open points were tested instead of
 argued: a copier update in a scratch clone, and a body edit on this PR.
 
 Nothing is built or fixed in this PR. `TODO.md` is not edited: the proposed
-changes to J's plan are the last section before "Not checked", for the owner.
+changes to J's plan have their own section below, for the owner.
 
 ## Verdicts
 
@@ -33,8 +33,8 @@ they were still run. They assume F4's fix.
 
 **Is J worth building as written? No.** Replayed over the 126 PRs merged
 2026-10-19 to 11-11 it goes red on 80, and 57 of those are docs-only PRs
-missing a line that would say "low". It passes civic-map 74, which published
-redrawn ward data, as low. It passes "Code review: skipped (not run)". With
+missing a line that would say "low". It would accept `Risk: low` on civic-map 74,
+which published redrawn ward data. It passes "Code review: skipped (not run)". With
 the edits below, the review half is worth building now. The tier half is
 worth building only if self-merge is still wanted, and then as a floor the
 check computes, not a line it grades.
@@ -139,8 +139,8 @@ that answer.
 
 What the line does add is a way to go up. 4 of the 49 stated tiers are above
 the computed one, and three of the four are right: civic-map 79 and 80 say
-high for `src/` behind a published number, and template 61 says medium for a
-skill "that reaches every project". A path list can't make those calls.
+high for `src/` behind a published number, and template 61 says medium because a
+skill file "reaches every project". A path list can't make those calls.
 
 *Sharpest argument against gating the tier:* the check asks the author to
 type a value CI has just computed and fails them when it differs. *Against
@@ -184,8 +184,8 @@ defaults name neither `tools/` nor `notebooks/`. alberta 29 adds
 
 **F7. tax-viz's list, the most complete one, still leaves out three files that
 write served data.** DECISIONS 2026-11-08 has each project name its served
-writers as high. Reading the fetched `master`: `main.py` writes twelve paths
-under `web/data/`, `scripts/generate_status.py` writes `web/data/status.json`,
+writers as high. Reading the fetched `master`: `main.py` names twelve output
+paths under `web/data/`, `scripts/generate_status.py` writes `web/data/status.json`,
 and `scripts/build_reference_layers.py` writes `web/data/reference.geojson`.
 None is high in its list; `main.py`, at the repo root, matches no glob at all.
 tax-viz 742 changed where `build_reference_layers.py` fetches from (medium by
@@ -240,17 +240,17 @@ three.
 **F11. A body edit does not re-run CI today, in any repo.** All eight
 `tests.yml` files use a bare `pull_request:` trigger, which GitHub runs on
 opened, synchronize and reopened. Tested on this run's own PR: see "The body
-edit test" below. Body edits are rare now (5 of 123 PRs since 10-19 in seven of the repos), but all
-5 came after the last commit and before the merge, and once a body can fail
-CI the fix is always a body edit. Adding `edited` to the trigger types re-runs
+edit test" below. Body edits are rare now: 5 of 123 PRs since 10-19 in
+seven of the repos. But all 5 came after the last commit and before the
+merge, and once a body can fail CI the fix is always a body edit. Adding `edited` to the trigger types re-runs
 the whole job per edit: a median 19 s in the template, 59 s in tax-viz, 63 s
 in civic-map. Two limits. GitHub's "Re-run jobs" replays the original event,
 so it would grade the old body (from GitHub's documentation, not tested here).
 And `tests.yml` is forked in civic-map and hand-ported in tax-viz, so the
 trigger change won't arrive there by itself.
 
-**F12. The `web/` default is the wrong question.** Only tax-viz and drive have
-a `web/` folder; civic-map's page is `site/`. Whether `web/` requires a review
+**F12. The `web/` default is the wrong question.** Of the eight repos only tax-viz
+and drive have a `web/` folder; civic-map's page is `site/`. Whether `web/` requires a review
 is each project's line in its own file. The default that matters is F4's. For
 tax-viz the trial's gap has one data point now: PR 796 (`web/index.html`,
 merged 11-10) ran `/code-review medium` and fixed 5 of 9 findings.
@@ -359,7 +359,19 @@ every script its publish workflow runs is high (tax-viz's `refresh.yml` runs
 
 ## The body edit test
 
-Pending: this section is filled in once the PR exists (the PR is a draft until then).
+Run on this audit's own PR, template 86, opened as a draft on `tests.yml` as
+it stands (bare `pull_request:`).
+
+| Step | Time (UTC, 2026-11-12) | Workflow runs on the branch |
+|---|---|---|
+| PR opened | 01:15:15 | 1 (`pull_request`, passed in 17 s) |
+| Body edited once with `gh pr edit` (GitHub records the edit at 01:16:01) | 01:16:01 | 1 |
+| Last look, four and a half minutes after the edit | 01:20:34 | 1, and one `test` check run on the head commit, started 01:15:22 |
+
+No run started after the edit. So today a body that failed the check could
+only be graded again by pushing a commit. What `edited` in the trigger types
+would do was not tested: that needs a change to `tests.yml`, which is J's
+build, not this audit's.
 
 ## Not checked
 
