@@ -68,6 +68,8 @@ symptom and re-measure the stated cause before acting on it.
   6. **`docs/REMOTE_VM.md` (F8).** PeterFriedrich.github.io records that `gh` isn't installed in a cloud VM, so the hook does nothing there, while this doc says it matters most there. Ask a cloud session to confirm, and whether its clone is shallow (F5), then say so.
   7. **The owner's call: a line at session end for commits on no remote (F4).** Nothing in the net looks at whether work is pushed. Compare by patch, or squash-merged branches are counted (4 of the 5 found on 2026-11-11 were).
   8. **Pass on** (their repos, their call; sent to `template` 2026-11-11): tax-viz, the four sims and PeterFriedrich.github.io have no `hooks_reminder`; server-ops's branch reminder asks for `origin/master` on a `main` repo; landing_page's list misses `wp-content/`; civic-map (`site/`, `prototype/`) and data-science-study (`studies/`) need their own `SUBSTANTIVE` (each opened a PR for it the same day: their PRs 82 and 6).
+- [ ] **Y. Docs self-merge reaches `CHANGE_PIPELINE.md`.** (opened 2026-11-12, owner; DECISIONS 2026-11-12.) When the user-level core is installed with its self-merge line, rewrite step 3.1 ("The owner merges") and its 2026-10-19 trial paragraph to point at the core rule, and drop the low-tier self-merge plan that M deferred. Then `PeterFriedrich.github.io` needs an override naming its content folders, and tax-viz and permit-speed delete `merge-docs-only-myself`. Until the core is installed, nothing changes.
+
 ## Done
 
 Closed items moved out of `## Open work` live in **`docs/TODO_archive.md`** — one line each below, reasoning there.
