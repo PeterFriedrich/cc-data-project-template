@@ -141,8 +141,14 @@ own copy; `copier update` keeps that edit.
 
 ## 3. Merging
 
-1. **The owner merges.** Don't merge your own PR unless the owner asked you to.
-   What the `Risk:` tier asks:
+1. **Who merges.** A session may merge its own PR when every changed file is
+   markdown outside the project's published paths, no claude.ai-synced file
+   changed, and CI is green: the self-merge line in the user-level core
+   (`~/.claude/CLAUDE.md`, §"Git and PRs"; DECISIONS 2026-11-12). Every other
+   PR waits for the owner. A project narrows this or turns it off with a line
+   in its own `CLAUDE.md` that starts `overrides core: self-merge`, naming the
+   paths it adds (a site's content folders, say). Without that line, the core
+   rule applies as written. For a PR the owner merges, the `Risk:` tier asks:
    - **low:** merge on green.
    - **medium:** as usual.
    - **high:** `/code-review` (and `/security-review` where 1.7's paths say)
@@ -151,13 +157,6 @@ own copy; `copier update` keeps that edit.
      needs two; an agent's approval never stands in for the owner's.
      Offer the same one-line explainer as step 1.1 for the slice the diff
      changes.
-
-   *Trial from 2026-10-19:* the tier is a label only and the owner still
-   merges every PR. If, after about two weeks, no low-tier PR needed anything
-   after the owner looked, sessions may merge their own low-tier PRs on green
-   (template TODO M), with a circuit breaker: a fix to a self-merged PR's
-   tests or to a number it published stops self-merge until the owner turns
-   it back on.
 2. **A push after the owner has looked says so.** If you push to a PR the
    owner has already looked at or approved, comment on the PR before they
    merge: "new commit since you looked: <what it changes>". Their look
@@ -252,7 +251,7 @@ the point: it shows the owner a gap, such as `master` with no required check.
 | | Sync note for claude.ai-synced files | not evaluated |
 | | CI green, and `master` requires the `test` check | not evaluated |
 | | No timed PR check-ins | not evaluated |
-| Merging | The owner merges | not evaluated |
+| Merging | Docs-only self-merge per the core, or `overrides core: self-merge` (name the paths) | not evaluated |
 | | A push after the owner looked is announced on the PR | not evaluated |
 | | Pre-push hook enabled (`git config core.hooksPath .githooks`) | not evaluated |
 | | Work confirmed on `master` with `git merge-base` | not evaluated |
