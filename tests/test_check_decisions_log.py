@@ -46,6 +46,16 @@ def test_new_row_citing_a_real_test_passes(tmp_path):
         assert check(root) == [], cite
 
 
+def test_new_row_citing_a_nested_test_passes(tmp_path):
+    # Projects with tests/api/ or tests/frontend/ (regenx, TODO T1).
+    for cite in ("`test_nested_thing`", "`tests/api/test_nested.py`"):
+        root = _tree(tmp_path / cite.strip("`").replace("/", "_"),
+                     _row("2026-09-17", f"**The clamp is $50k** — pinned by {cite}."))
+        (root / "tests" / "api").mkdir()
+        (root / "tests" / "api" / "test_nested.py").write_text("def test_nested_thing():\n    pass\n")
+        assert check(root) == [], cite
+
+
 def test_new_row_tagged_unverifiable_passes(tmp_path):
     root = _tree(tmp_path, _row("2026-09-17", "**Neighbourhood is the unit** [unverifiable] — licensing."))
     assert check(root) == []
