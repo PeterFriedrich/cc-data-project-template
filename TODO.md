@@ -8,6 +8,12 @@ group them; closed items are moved to `docs/TODO_archive.md` by the tool, which
 leaves a one-line stub under `## Done`. An open item can be stale — reproduce the
 symptom and re-measure the stated cause before acting on it.
 
+**By-hand actions** only the owner can do (a command a session's permissions
+block, a settings change) go under `### Waiting on the owner`, the last group in
+`## Open work`, one line each, so they can be collated across repos with
+`grep -n '^- \[ \] \*\*Owner runs:'` (anchored, so this example doesn't match):
+``- [ ] **Owner runs:** `<command or action>` — why · confirm: `<check>` · urgency · since YYYY-MM-DD``
+
 ## Open work
 
 ### Template improvement (opened 2026-09-29)
@@ -68,12 +74,18 @@ symptom and re-measure the stated cause before acting on it.
   6. **`docs/REMOTE_VM.md` (F8).** PeterFriedrich.github.io records that `gh` isn't installed in a cloud VM, so the hook does nothing there, while this doc says it matters most there. Ask a cloud session to confirm, and whether its clone is shallow (F5), then say so.
   7. **The owner's call: a line at session end for commits on no remote (F4).** Nothing in the net looks at whether work is pushed. Compare by patch, or squash-merged branches are counted (4 of the 5 found on 2026-11-11 were).
   8. **Pass on** (their repos, their call; sent to `template` 2026-11-11): tax-viz, the four sims and PeterFriedrich.github.io have no `hooks_reminder`; server-ops's branch reminder asks for `origin/master` on a `main` repo; landing_page's list misses `wp-content/`; civic-map (`site/`, `prototype/`) and data-science-study (`studies/`) need their own `SUBSTANTIVE` (each opened a PR for it the same day: their PRs 82 and 6).
-- [ ] **Z. Item records in `TODO.md`, and a thinner handoff.** (opened 2026-11-25, owner, from outside advice on beads, an issue tracker for agents: `/home/opc/research/cc-data-project-template/orchestrator-beads-advice_reply_2026-11-24.md`.) The useful idea is that a session reads one item by its ID instead of the whole backlog, and writes to the item while it works instead of narrating at session end. Keep it in markdown: 13 files read `TODO.md` (`make_brief.py`, `handoff_gap.py`, `todo_archive.py`, the citation guard, tests). Moving to beads or GitHub Issues would break the brief (DECISIONS 2026-09-29). Evidence: tax-viz's `TODO.md` is 320 KB with 156 closed items left in it (measured 2026-11-24), and it is "read first" every session. S15's crash lost only the end-of-session handoff; what was updated during the work (PRs, commits, `TODO.md`) survived. **Plan first** (it changes a format every project inherits). Sketch:
+- [ ] **Z. Item records in `TODO.md`, and a thinner handoff.** (opened 2026-11-25, owner, from outside advice on beads, an issue tracker for agents: `/home/opc/research/cc-data-project-template/orchestrator-beads-advice_reply_2026-11-24.md`.) The useful idea is that a session reads one item by its ID instead of the whole backlog, and writes to the item while it works instead of narrating at session end. Keep it in markdown: 13 files read `TODO.md` (`make_brief.py`, `handoff_gap.py`, `todo_archive.py`, the citation guard, tests). Moving to beads or GitHub Issues would break the brief (DECISIONS 2026-09-29). Evidence: tax-viz's `TODO.md` is 320 KB, 272 KB of it the bodies of 116 open items (its 156 `- [x]` lines are the designed one-line `## Done` stubs; corrected 2026-11-26). S15's crash lost only the end-of-session handoff; what was updated during the work (PRs, commits, `TODO.md`) survived. **Plan first** (it changes a format every project inherits). Sketch:
   1. **Item record.** Keep the `- [ ] **ID. Title.**` line. Under it, optional fixed fields: `Status:`, `Blocked by:` (item IDs), `Needs owner:` (the question), `Tried:` (what failed and why), and dated `Log:` lines a session appends as it works. Extend the format contract at the top of this file.
   2. **`tools/todo.py`:** `show <ID>` prints one item; `ready` lists open items with no open blocker and no owner question; `needs-owner` lists the questions. CLAUDE.md's "read it first" becomes "run `ready`, then `show` the item". Beads' `bd show` / `bd ready` are the model.
   3. **Handoff skill.** It keeps the model and effort, where the session stopped (item IDs), and lessons that belong to no item. Anything about an item goes in the item.
   4. **Checks.** `make_brief.py`, `todo_archive.py` and `handoff_gap.py` still pass on the new format. A test where a malformed field fails the parser.
   Done when the template ships it and one live project has run a few sessions on it. Not decided: whether this replaces the handoff files or only shrinks them.
+  **Survey 2026-11-26** (8 sessions; collated in the research file above): all eight say shrink the handoff, don't replace it; seven of eight say `ready` would mislead (order lives in the handoff's Next Steps, most items wait on the owner, blockers are prose); no project has item IDs; `make_brief.py` folds every indented line into the 280-character brief text, so field and `Log:` lines need skipping. Proposed narrowing (**owner's call, not decided**): stable IDs, `Log:` lines written during work that `make_brief` skips and that are capped, `### Waiting on the owner` instead of `Needs owner:` / `needs-owner`, handoffs keep Next Steps citing IDs. New Projects (claude.ai/code) clone repos into cloud threads and skip `.claude/settings.json` hooks; whether `BRIEF.md` and Sync survive the migration is open.
+  **Decided 2026-11-26** (DECISIONS row): by-hand owner actions are `**Owner runs:**` lines under `### Waiting on the owner`, per repo; this part of Z is settled.
+### Waiting on the owner
+
+- [ ] **Owner runs:** end a session in cc-data-project-template with an uncommitted change in `scripts/` and watch for the handoff-gap notice — why: the SessionEnd hook writes stderr and exits 0, which may reach only the debug log (TODO X step 2, F6) · confirm: tell the template session whether the notice showed · low · since 2026-11-11
+
 ## Done
 
 Closed items moved out of `## Open work` live in **`docs/TODO_archive.md`** — one line each below, reasoning there.
