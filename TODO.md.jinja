@@ -13,6 +13,8 @@ block, a settings change) go under `### Waiting on the owner`, the last group in
 `## Open work`, one line each, so they can be collated across repos with
 `grep -n '^- \[ \] \*\*Owner runs:'` (anchored, so this example doesn't match):
 ``- [ ] **Owner runs:** `<command or action>` — why · confirm: `<check>` · urgency · since YYYY-MM-DD``
+The SessionStart hook lists the open ones; run each `confirm:` check and tick
+the lines that pass.
 
 ## Open work
 

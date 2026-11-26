@@ -55,6 +55,7 @@ Usage:
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -174,6 +175,40 @@ def hooks_reminder():
             "merged. Run `git config core.hooksPath .githooks` (CLAUDE.md).")
 
 
+# `server` collates these across the box with the same anchored pattern
+# (DECISIONS 2026-11-26), so the quoted format example in TODO.md never matches.
+OWNER_RUNS = re.compile(r"^- \[ \] \*\*Owner runs:\*\*\s*(.*)$")
+OWNER_RUNS_SHOWN = 5
+
+
+def owner_runs_reminder():
+    # type: () -> Optional[str]
+    """The repo's open `Owner runs:` lines, else None.
+
+    Fires at every session start while a line is open, on purpose: each one is
+    real work for the owner, or a `confirm:` check the session hasn't run. Done
+    actions sat open through several handoffs because nothing asked a session to
+    run the check. The hook only reads; it never runs a `confirm:` check."""
+    try:
+        text = (ROOT / "TODO.md").read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
+    found = [m.group(1) for m in map(OWNER_RUNS.match, text.split("\n")) if m]
+    if not found:
+        return None
+    lines = [f"⚠️ {len(found)} open `Owner runs:` line(s) in TODO.md:"]
+    for f in found[:OWNER_RUNS_SHOWN]:
+        # The action and its check; the "why" is in TODO.md.
+        c = re.search(r"confirm:\s*(.*?)(?: · |$)", f)
+        s = f.split(" — ")[0] + (" · confirm: " + c.group(1) if c else "")
+        lines.append("    " + (s if len(s) <= 200 else s[:199] + "…"))
+    if len(found) > OWNER_RUNS_SHOWN:
+        lines.append(f"    …+{len(found) - OWNER_RUNS_SHOWN} more")
+    lines.append("Run each line's `confirm:` check and tick the ones that pass; "
+                 "ask the owner only about the rest.")
+    return "\n".join(lines)
+
+
 def message(g, at_start=False):
     bits = []
     if g["commits"]:
@@ -217,14 +252,16 @@ def main(argv=None):
         # on the way out.
         branches = None if args.session_end else merged_branch_reminder()
         hooks = None if args.session_end else hooks_reminder()
+        owner = None if args.session_end else owner_runs_reminder()
     except Exception:  # noqa: BLE001 — belt and braces; a hook must never raise
         return 0
-    if g is None and branches is None and hooks is None:
+    if g is None and branches is None and hooks is None and owner is None:
         return 0  # nothing owed: say nothing, so the message means something
 
     if args.session_start:
         text = "\n\n".join(
-            t for t in (g and message(g, at_start=True), branches, hooks) if t)
+            t for t in (g and message(g, at_start=True), branches, hooks, owner)
+            if t)
         print(json.dumps({
             "systemMessage": text,
             "hookSpecificOutput": {
@@ -237,7 +274,8 @@ def main(argv=None):
         # shows stderr to the user. The hook must not redirect stderr away.
         sys.stderr.write(message(g) + "\n")
     else:
-        print("\n\n".join(t for t in (g and message(g), branches, hooks) if t))
+        print("\n\n".join(t for t in (g and message(g), branches, hooks, owner)
+                          if t))
     return 0
 
 
