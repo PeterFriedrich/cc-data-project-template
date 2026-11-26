@@ -1,4 +1,5 @@
-"""Tests for the merged-branch reminder in scripts/handoff_gap.py.
+"""Tests for the merged-branch, hooks-path and Owner runs reminders in
+scripts/handoff_gap.py.
 
 Ported with the reminder from edmonton-tax-viz (its PR #727), whose
 tests/test_handoff_gap.py also covers the handoff-gap half; that half is not
@@ -210,3 +211,25 @@ def test_owner_runs_and_handoff_gap_are_both_reported(repo, capsys):
     hg.main(["--session-start"])
     text = json.loads(capsys.readouterr().out)["systemMessage"]
     assert "Owner runs:" in text and "that handoff records none of it" in text
+
+
+def test_owner_runs_reminder_matches_what_server_collates(repo):
+    # server's grep has no closing ** in it; a line bolded past the colon counts.
+    _todo(repo, "- [ ] **Owner runs: press Sync** — why · confirm: `synced` · low")
+    assert "press Sync" in hg.owner_runs_reminder()
+
+
+def test_owner_runs_reminder_shows_the_real_confirm_check_whole(repo):
+    _todo(repo, "- [ ] **Owner runs:** `x` — can't confirm: needs login · "
+                "confirm: `a · b` · low · since 2026-11-26",
+          "- [ ] **Owner runs:** " + "y" * 300 + " — why · confirm: `chk` · low")
+    text = hg.owner_runs_reminder()
+    assert "`x` · confirm: `a · b`\n" in text
+    assert "needs login" not in text
+    assert "… · confirm: `chk`" in text
+
+
+def test_owner_runs_reminder_without_the_em_dash_shows_the_line_once(repo):
+    _todo(repo, "- [ ] **Owner runs:** `cmd` -- why · confirm: `chk` · low")
+    text = hg.owner_runs_reminder()
+    assert text.count("confirm: `chk`") == 1

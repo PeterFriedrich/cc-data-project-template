@@ -177,7 +177,10 @@ def hooks_reminder():
 
 # `server` collates these across the box with the same anchored pattern
 # (DECISIONS 2026-11-26), so the quoted format example in TODO.md never matches.
-OWNER_RUNS = re.compile(r"^- \[ \] \*\*Owner runs:\*\*\s*(.*)$")
+OWNER_RUNS = re.compile(r"^- \[ \] \*\*Owner runs:(?:\*\*)?\s*(.*)$")
+# A `confirm:` that opens a `·` segment, so "can't confirm: …" in the why
+# doesn't match; a backticked check is taken whole, `·` and all.
+CONFIRM = re.compile(r"(?:^|· )confirm:\s*(`[^`]*`|.*?)(?: · |$)")
 OWNER_RUNS_SHOWN = 5
 
 
@@ -198,10 +201,12 @@ def owner_runs_reminder():
         return None
     lines = [f"⚠️ {len(found)} open `Owner runs:` line(s) in TODO.md:"]
     for f in found[:OWNER_RUNS_SHOWN]:
-        # The action and its check; the "why" is in TODO.md.
-        c = re.search(r"confirm:\s*(.*?)(?: · |$)", f)
-        s = f.split(" — ")[0] + (" · confirm: " + c.group(1) if c else "")
-        lines.append("    " + (s if len(s) <= 200 else s[:199] + "…"))
+        # The action and its check; the "why" is in TODO.md. Only the action
+        # is capped, so a long one can't push the check off the end.
+        action, sep, rest = f.partition(" — ")
+        c = CONFIRM.search(rest) if sep else None
+        s = action if len(action) <= 160 else action[:159] + "…"
+        lines.append("    " + s + (" · confirm: " + c.group(1) if c else ""))
     if len(found) > OWNER_RUNS_SHOWN:
         lines.append(f"    …+{len(found) - OWNER_RUNS_SHOWN} more")
     lines.append("Run each line's `confirm:` check and tick the ones that pass; "
